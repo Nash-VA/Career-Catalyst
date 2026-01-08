@@ -1,299 +1,417 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Sparkles, Target, TrendingUp, Award, BookOpen, Users, Zap, Star } from 'lucide-react';
+import { 
+  Sparkles, Target, TrendingUp, Award, BookOpen, Users, ArrowRight, 
+  Play, Zap, Brain, BarChart3, ChevronDown
+} from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
 import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+      if (heroRef.current) {
+        const scrolled = window.scrollY;
+        heroRef.current.style.transform = `translateY(${scrolled * 0.3}px)`;
+      }
     };
-
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 
   const features = [
     {
-      icon: <Sparkles size={48} color="var(--primary)" />,
-      title: 'AI-Powered Recommendations',
-      description: 'Machine learning algorithms analyze your profile to suggest perfect career matches tailored to your unique skills and interests.'
+      icon: Brain,
+      title: 'AI Career Matching',
+      description: 'Machine learning analyzes your profile to recommend careers perfectly aligned with your skills and aspirations.',
+      gradient: 'from-primary via-accent to-dark'
     },
     {
-      icon: <Target size={48} color="var(--primary)" />,
+      icon: BarChart3,
       title: 'Skill Gap Analysis',
-      description: 'Identify exactly what skills you need to develop to reach your dream career with detailed gap analysis and actionable insights.'
+      description: 'Precision mapping identifies exactly what skills you need to develop to reach your target role.',
+      gradient: 'from-accent via-primary to-dark'
     },
     {
-      icon: <TrendingUp size={48} color="var(--primary)" />,
+      icon: Target,
       title: 'Personalized Roadmap',
-      description: 'Get a step-by-step learning path with milestones, timelines, and resources to guide your career transformation journey.'
+      description: 'Step-by-step learning paths with milestones, curated resources, and progress tracking.',
+      gradient: 'from-dark via-primary to-accent'
     },
     {
-      icon: <Award size={48} color="var(--primary)" />,
-      title: 'Resume Optimization',
-      description: 'Build or enhance your resume with AI-powered suggestions that highlight your strengths and match industry standards.'
+      icon: Award,
+      title: 'Resume Optimizer',
+      description: 'AI-powered analysis enhances your resume to match industry standards and highlight your strengths.',
+      gradient: 'from-primary via-dark to-accent'
     },
     {
-      icon: <BookOpen size={48} color="var(--primary)" />,
-      title: 'Course Recommendations',
-      description: 'Access curated learning resources and courses specifically matched to bridge your skill gaps and career objectives.'
+      icon: BookOpen,
+      title: 'Course Curation',
+      description: 'Access thousands of courses filtered specifically for your skill gaps and learning style.',
+      gradient: 'from-accent via-dark to-primary'
     },
     {
-      icon: <Users size={48} color="var(--primary)" />,
+      icon: Users,
       title: 'Interview Preparation',
-      description: 'Practice with career-specific interview questions and get expert tips to ace your next job interview with confidence.'
+      description: 'Practice with role-specific questions, get AI feedback, and track your improvement.',
+      gradient: 'from-dark via-accent to-primary'
     }
   ];
 
   const steps = [
-    { number: '01', title: 'Create Your Profile', description: 'Sign up and complete your profile with education, skills, and career interests.' },
-    { number: '02', title: 'Get AI Analysis', description: 'Our AI analyzes your profile and recommends best-fit career paths.' },
-    { number: '03', title: 'Identify Skill Gaps', description: 'Discover what skills you need to develop for your target career.' },
-    { number: '04', title: 'Follow Your Roadmap', description: 'Access personalized learning paths, courses, and interview prep materials.' }
+    { 
+      number: '01', 
+      icon: '📄',
+      title: 'Upload Resume', 
+      description: 'Quick profile creation with AI-powered resume parsing in seconds.'
+    },
+    { 
+      number: '02', 
+      icon: '🤖',
+      title: 'AI Analysis', 
+      description: 'Our ML models evaluate your profile to find your perfect career match.'
+    },
+    { 
+      number: '03', 
+      icon: '🗺️',
+      title: 'Get Roadmap', 
+      description: 'Receive personalized learning plan with timelines and resources.'
+    },
+    { 
+      number: '04', 
+      icon: '🚀',
+      title: 'Take Action', 
+      description: 'Start learning, track progress, and land interviews faster.'
+    }
   ];
 
-  // Calculate parallax values
-  const heroParallax = scrollY * 0.5;
-  const contentParallax = scrollY * 0.3;
-  const opacity = Math.max(0, 1 - scrollY / 500);
-
   return (
-    <div className="min-h-screen bg-dark overflow-hidden">
+    <div className="min-h-screen bg-light overflow-hidden">
       <Navbar transparent />
       
-      {/* Magical Floating Particles */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-secondary rounded-full opacity-60"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animation: `float ${5 + Math.random() * 10}s infinite ease-in-out`,
-              animationDelay: `${Math.random() * 5}s`,
-              transform: `translate(${(mousePosition.x - window.innerWidth / 2) * 0.01}px, ${(mousePosition.y - window.innerHeight / 2) * 0.01}px)`
-            }}
-          />
-        ))}
+      {/* Subtle Background Elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-30">
+        <div 
+          className="absolute top-0 right-0 w-[1000px] h-[1000px] bg-accent rounded-full blur-3xl"
+          style={{ transform: `translate(${scrollY * 0.15}px, ${scrollY * 0.1}px)` }}
+        />
+        <div 
+          className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-secondary rounded-full blur-3xl"
+          style={{ transform: `translate(${-scrollY * 0.1}px, ${-scrollY * 0.15}px)` }}
+        />
       </div>
 
-      {/* Hero Section with Advanced Parallax */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Background Layers */}
-        <div 
-          className="absolute inset-0 bg-gradient-to-br from-primary via-accent to-dark"
-          style={{ transform: `translateY(${heroParallax}px) scale(${1 + scrollY * 0.0005})` }}
-        >
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-secondary to-transparent animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* Animated Orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div 
-            className="absolute top-20 left-20 w-96 h-96 bg-secondary rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse"
-            style={{ 
-              transform: `translate(${heroParallax * 0.5}px, ${heroParallax * 0.3}px) scale(${1 + scrollY * 0.001})`,
-              animation: 'float 8s infinite ease-in-out'
-            }}
-          ></div>
-          <div 
-            className="absolute top-40 right-20 w-80 h-80 bg-accent rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse"
-            style={{ 
-              transform: `translate(${-heroParallax * 0.4}px, ${heroParallax * 0.6}px) scale(${1 + scrollY * 0.001})`,
-              animation: 'float 10s infinite ease-in-out',
-              animationDelay: '2s'
-            }}
-          ></div>
-          <div 
-            className="absolute bottom-20 left-1/2 w-72 h-72 bg-primary rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-pulse"
-            style={{ 
-              transform: `translate(${heroParallax * 0.3}px, ${-heroParallax * 0.4}px) scale(${1 + scrollY * 0.001})`,
-              animation: 'float 12s infinite ease-in-out',
-              animationDelay: '4s'
-            }}
-          ></div>
-        </div>
-
-        {/* Sparkle Effects */}
-        <div className="absolute inset-0">
-          {[...Array(30)].map((_, i) => (
-            <Sparkles
-              key={i}
-              className="absolute text-secondary animate-pulse"
-              size={Math.random() * 20 + 10}
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                opacity: opacity * Math.random(),
-                animation: `twinkle ${2 + Math.random() * 3}s infinite ease-in-out`,
-                animationDelay: `${Math.random() * 2}s`,
-                transform: `translate(${(mousePosition.x - window.innerWidth / 2) * 0.02}px, ${(mousePosition.y - window.innerHeight / 2) * 0.02}px)`
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Main Content */}
-        <div 
-          className="relative z-10 text-center text-white px-4 max-w-5xl mx-auto"
-          style={{ 
-            transform: `translateY(${contentParallax}px)`,
-            opacity: opacity
-          }}
-        >
-          <div className="mb-8">
-            <Zap 
-              className="mx-auto mb-4 text-secondary animate-pulse" 
-              size={64}
-              style={{ filter: 'drop-shadow(0 0 20px rgba(223, 214, 174, 0.8))' }}
-            />
-          </div>
-          
-          <h1 
-            className="text-6xl md:text-8xl font-bold mb-6 leading-tight"
-            style={{
-              background: 'linear-gradient(to right, #ffffff, #DFD6AE, #ffffff)',
-              backgroundSize: '200% auto',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              animation: 'shimmer 3s linear infinite'
-            }}
-          >
-            Discover Your<br />Perfect Career Path
-          </h1>
-          
-          <p 
-            className="text-xl md:text-2xl mb-8 text-secondary max-w-3xl mx-auto"
-            style={{ 
-              textShadow: '0 0 20px rgba(223, 214, 174, 0.5)',
-              animation: 'fadeIn 2s ease-in-out'
-            }}
-          >
-            AI-powered career guidance platform that analyzes your skills, identifies gaps, 
-            and provides personalized roadmaps to your dream career
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/signup">
-              <Button 
-                size="lg" 
-                className="min-w-[220px] bg-secondary text-primary hover:scale-110 hover:shadow-2xl transition-all duration-300 font-bold text-lg"
-                style={{ boxShadow: '0 0 30px rgba(223, 214, 174, 0.5)' }}
+      {/* Hero Section */}
+      <section className="relative min-h-screen flex items-center px-4 pt-24 pb-20">
+        <div className="max-w-7xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left: Content */}
+            <div className="space-y-8 relative z-10">
+              <div 
+                className="inline-flex items-center gap-3 px-5 py-3 bg-accent/10 rounded-full shadow-lg animate-fade-in border border-accent/20"
+                style={{ animationDelay: '0.1s' }}
               >
-                <Sparkles className="inline mr-2" size={20} />
-                Get Started Free
-              </Button>
-            </Link>
-            <Link to="/login">
-              <Button 
-                size="lg"
-                variant="outline"
-                className="min-w-[220px] bg-transparent text-white border-2 border-white/80 hover:bg-white/10 hover:scale-110 transition-all duration-300 font-semibold text-lg backdrop-blur-sm"
-                style={{ boxShadow: '0 0 20px rgba(255, 255, 255, 0.3)' }}
-              >
-                Login
-              </Button>
-            </Link>
-          </div>
-        </div>
+                <div className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+                </div>
+                <span className="text-sm font-semibold text-primary">
+                  AI-Powered Career Platform
+                </span>
+              </div>
 
-        {/* Scroll Indicator */}
-        <div 
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce"
-          style={{ opacity: Math.max(0, 1 - scrollY / 200) }}
-        >
-          <div className="w-6 h-10 border-2 border-secondary rounded-full flex items-start justify-center p-2">
-            <div className="w-1 h-3 bg-secondary rounded-full animate-pulse"></div>
+              <div className="space-y-6">
+                <h1 
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold leading-[1.1] animate-slide-up"
+                  style={{ animationDelay: '0.2s' }}
+                >
+                  <span className="text-primary">Navigate Your</span>
+                  <br />
+                  <span className="bg-gradient-to-r from-accent via-primary to-accent bg-clip-text text-transparent">
+                    Dream Career
+                  </span>
+                  <br />
+                  <span className="text-dark">With AI</span>
+                </h1>
+                
+                <p 
+                  className="text-xl md:text-2xl text-gray-600 leading-relaxed max-w-xl animate-slide-up"
+                  style={{ animationDelay: '0.3s' }}
+                >
+                  Get personalized career recommendations, bridge skill gaps, and accelerate your professional growth with AI-driven insights.
+                </p>
+              </div>
+
+              <div 
+                className="flex flex-col sm:flex-row gap-4 animate-slide-up"
+                style={{ animationDelay: '0.4s' }}
+              >
+                <Link to="/signup" className="group">
+                  <Button 
+                    size="lg" 
+                    className="w-full sm:w-auto px-8 py-5 text-lg font-bold bg-primary hover:bg-accent text-white shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                  >
+                    <Sparkles className="inline w-5 h-5 mr-2" />
+                    Get Started Free
+                    <ArrowRight className="inline ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button 
+                    size="lg"
+                    variant="outline"
+                    className="w-full sm:w-auto px-8 py-5 text-lg font-semibold border-2 border-primary text-primary hover:bg-primary hover:text-white transition-all duration-300 group"
+                  >
+                    <Play className="inline mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
+                    Watch Demo
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            {/* Right: Visual Element */}
+            <div 
+              ref={heroRef}
+              className="relative hidden lg:block animate-fade-in"
+              style={{ animationDelay: '0.3s' }}
+            >
+              <div className="relative w-full h-[700px]">
+                {/* Floating Dashboard Card */}
+                <div 
+                  className="absolute top-0 right-0 w-[480px] bg-white rounded-3xl shadow-2xl p-8 border border-gray-100 hover:shadow-[0_20px_60px_rgba(39,66,69,0.3)] transition-all duration-500 hover:scale-105"
+                  style={{ 
+                    animation: 'float 6s ease-in-out infinite',
+                    animationDelay: '0s' 
+                  }}
+                >
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <p className="text-sm text-gray-500 mb-1">Career Match Score</p>
+                      <p className="text-4xl font-bold text-primary">98%</p>
+                    </div>
+                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg">
+                      <Target className="w-10 h-10 text-white" />
+                    </div>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700 font-medium">Senior Software Engineer</span>
+                      <span className="text-green-600 font-semibold text-sm">Perfect Fit</span>
+                    </div>
+                    <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-1000"
+                        style={{ width: '98%' }}
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 pt-4">
+                      {['React', 'Node.js', 'TypeScript'].map((skill, idx) => (
+                        <div key={idx} className="px-3 py-2 bg-accent/10 rounded-lg text-center hover:bg-accent/20 transition-colors duration-300 cursor-pointer">
+                          <p className="text-xs font-semibold text-primary">{skill}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Skills Card */}
+                <div 
+                  className="absolute top-48 left-0 w-[360px] bg-white rounded-3xl shadow-2xl p-6 border border-gray-100 hover:shadow-[0_20px_60px_rgba(39,66,69,0.3)] transition-all duration-500 hover:scale-105"
+                  style={{ 
+                    animation: 'float 7s ease-in-out infinite',
+                    animationDelay: '1s' 
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-secondary flex items-center justify-center">
+                      <TrendingUp className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Skills to Master</p>
+                      <p className="text-2xl font-bold text-primary">3 Core</p>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    {[
+                      { name: 'React.js', progress: 85 },
+                      { name: 'System Design', progress: 60 },
+                      { name: 'Cloud (AWS)', progress: 40 }
+                    ].map((skill, idx) => (
+                      <div key={idx} className="group">
+                        <div className="flex justify-between mb-1.5">
+                          <span className="text-sm font-medium text-gray-700 group-hover:text-primary transition-colors">{skill.name}</span>
+                          <span className="text-sm font-semibold text-gray-900">{skill.progress}%</span>
+                        </div>
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-accent to-primary rounded-full transition-all duration-1000 group-hover:from-primary group-hover:to-accent"
+                            style={{ width: `${skill.progress}%`, transitionDelay: `${idx * 200}ms` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Progress Card */}
+                <div 
+                  className="absolute bottom-20 right-12 w-[280px] bg-white rounded-3xl shadow-2xl p-6 border border-gray-100 hover:shadow-[0_20px_60px_rgba(39,66,69,0.3)] transition-all duration-500 hover:scale-105"
+                  style={{ 
+                    animation: 'float 8s ease-in-out infinite',
+                    animationDelay: '2s' 
+                  }}
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-secondary to-accent flex items-center justify-center">
+                      <Award className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500">Learning Progress</p>
+                      <p className="text-2xl font-bold text-primary">67%</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full w-[67%] bg-gradient-to-r from-primary to-accent rounded-full" />
+                    </div>
+                    <Zap className="w-5 h-5 text-accent animate-pulse" />
+                  </div>
+                  <p className="text-xs text-gray-600 mt-3">Keep up the great work! 🎉</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div 
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce"
+            style={{ opacity: Math.max(0, 1 - scrollY / 300) }}
+          >
+            <div className="flex flex-col items-center gap-2 text-accent">
+              <span className="text-sm font-medium">Scroll to explore</span>
+              <ChevronDown className="w-6 h-6" />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section - Fixed visibility issue */}
-      <section className="relative py-32 px-4 bg-light min-h-screen">
+      {/* Features Section - Stays on Same View */}
+      <section className="relative py-32 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-primary mb-4">
-              Powerful Features for Your Success
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 rounded-full mb-6">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Powerful Features</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold text-primary mb-6">
+              Everything You Need to
+              <span className="block text-accent">Accelerate Your Career</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Everything you need to navigate your career journey with confidence and clarity
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Comprehensive tools powered by AI to guide you from where you are to where you want to be
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card 
+              <div
                 key={index}
-                hover 
-                className="h-full hover:shadow-2xl transition-all duration-500 animate-slide-up"
-                style={{ 
-                  animationDelay: `${index * 0.1}s`,
-                  background: 'linear-gradient(135deg, #ffffff 0%, #f7fafc 100%)'
-                }}
+                className="group"
               >
-                <div className="flex flex-col items-center text-center p-4">
-                  <div className="mb-4 transform hover:scale-125 hover:rotate-12 transition-all duration-300">
-                    {feature.icon}
+                <Card className="relative h-full p-8 hover:shadow-[0_20px_60px_rgba(39,66,69,0.2)] transition-all duration-500 overflow-hidden border-2 border-gray-100 hover:border-accent hover:-translate-y-2">
+                  {/* Gradient Overlay on Hover */}
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
+                  
+                  <div className="relative z-10">
+                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg group-hover:shadow-xl`}>
+                      <feature.icon className="w-8 h-8 text-white" />
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-dark mb-4 group-hover:text-primary transition-colors duration-300">
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                      {feature.description}
+                    </p>
+                    
+                    <div className="mt-6 flex items-center text-accent opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                      <span className="text-sm font-semibold">Learn more</span>
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </div>
-                  <h3 className="text-xl font-bold text-dark mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </div>
-              </Card>
+
+                  {/* Corner Accent */}
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-accent/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                </Card>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* How It Works - Magical Timeline */}
-      <section className="relative py-32 px-4 bg-gradient-to-br from-primary via-accent to-dark overflow-hidden">
-        <div className="absolute inset-0 opacity-20">
+      {/* How It Works */}
+      <section className="relative py-32 px-4 gradient-bg overflow-hidden">
+        <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle, #DFD6AE 1px, transparent 1px)',
-            backgroundSize: '50px 50px'
+            backgroundImage: 'radial-gradient(circle, rgba(223, 214, 174, 0.5) 2px, transparent 2px)',
+            backgroundSize: '48px 48px'
           }}></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-20 text-white">
-            <h2 className="text-5xl md:text-6xl font-bold mb-4">
-              How It Works
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full mb-6">
+              <Zap className="w-4 h-4 text-secondary" />
+              <span className="text-sm font-semibold text-white">Simple Process</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
+              From Profile to Dream Job
+              <span className="block text-secondary">In 4 Simple Steps</span>
             </h2>
-            <p className="text-xl text-secondary">
-              Your magical journey to the perfect career in four enchanting steps
+            <p className="text-xl text-secondary/90 max-w-2xl mx-auto">
+              Our streamlined process gets you from confusion to clarity
             </p>
           </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((step, index) => (
-              <div 
-                key={index} 
-                className="relative text-center animate-slide-up"
-                style={{ animationDelay: `${index * 0.2}s` }}
-              >
-                <Card className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 hover:bg-white/20 transition-all duration-500 hover:scale-105">
-                  <div className="text-7xl font-bold text-secondary mb-4 animate-pulse">{step.number}</div>
-                  <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                  <p className="text-secondary">{step.description}</p>
+              <div key={index} className="group">
+                <Card className="relative bg-white/10 backdrop-blur-xl border-2 border-white/20 p-8 hover:bg-white/20 hover:border-white/40 transition-all duration-500 h-full hover:scale-105 hover:shadow-[0_20px_60px_rgba(223,214,174,0.3)]">
+                  <div className="text-6xl mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                    {step.icon}
+                  </div>
+                  
+                  <div className="text-7xl font-bold text-white/20 mb-4 leading-none group-hover:text-secondary/30 transition-colors duration-300">
+                    {step.number}
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-secondary transition-colors duration-300">
+                    {step.title}
+                  </h3>
+                  
+                  <p className="text-white/80 leading-relaxed group-hover:text-white transition-colors duration-300">
+                    {step.description}
+                  </p>
+
+                  {/* Corner Glow */}
+                  <div className="absolute top-0 right-0 w-20 h-20 bg-secondary/20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl" />
                 </Card>
-                
+
+                {/* Animated Connector */}
                 {index < steps.length - 1 && (
-                  <div className="hidden lg:block absolute top-16 -right-4 w-8 h-1 bg-secondary opacity-50"></div>
+                  <div className="hidden lg:block absolute top-1/2 -right-3 w-6 h-1 bg-secondary/30 z-10">
+                    <div className="w-full h-full bg-secondary/60 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500" />
+                  </div>
                 )}
               </div>
             ))}
@@ -301,132 +419,103 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-32 px-4 bg-light relative overflow-hidden">
-        <div className="absolute inset-0">
-          {[...Array(5)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-64 h-64 bg-primary rounded-full filter blur-3xl opacity-5"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `float ${10 + Math.random() * 10}s infinite ease-in-out`,
-                animationDelay: `${Math.random() * 5}s`
-              }}
-            />
-          ))}
+      {/* Final CTA */}
+      <section className="relative py-32 px-4 bg-dark overflow-hidden">
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-accent rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid md:grid-cols-3 gap-12 text-center">
-            {[
-              { value: '10K+', label: 'Active Users' },
-              { value: '50+', label: 'Career Paths' },
-              { value: '95%', label: 'Success Rate' }
-            ].map((stat, index) => (
-              <div key={index} className="p-8">
-                <div className="text-7xl font-bold text-primary mb-4 hover:scale-110 transition-transform duration-300">
-                  {stat.value}
-                </div>
-                <p className="text-2xl text-gray-600 font-semibold">{stat.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-32 px-4 gradient-bg overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-secondary to-transparent opacity-20 animate-pulse"></div>
-        </div>
-
-        <div className="max-w-4xl mx-auto text-center text-white relative z-10">
-          <div className="mb-8">
-            <Sparkles className="mx-auto text-secondary animate-spin" size={64} style={{ animationDuration: '3s' }} />
-          </div>
-          <h2 className="text-5xl md:text-6xl font-bold mb-6">
-            Ready to Transform Your Career?
+        <div className="max-w-4xl mx-auto text-center relative z-10">
+          <Sparkles className="mx-auto text-secondary w-16 h-16 mb-8 animate-pulse" />
+          
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+            Ready to Transform
+            <span className="block text-secondary">Your Career?</span>
           </h2>
-          <p className="text-2xl mb-10 text-secondary">
-            Join thousands of students and professionals who found their perfect career path
+
+          <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed">
+            Start your journey today with AI-powered career guidance
           </p>
+
           <Link to="/signup">
             <Button 
               size="lg" 
-              className="min-w-[280px] bg-secondary text-primary hover:scale-110 hover:shadow-2xl transition-all duration-300 font-bold text-xl py-6"
-              style={{ boxShadow: '0 0 40px rgba(223, 214, 174, 0.6)' }}
+              className="group px-12 py-6 text-xl font-bold bg-secondary hover:bg-white text-primary shadow-2xl hover:shadow-[0_20px_60px_rgba(223,214,174,0.4)] transition-all duration-300 hover:scale-110"
             >
-              <Zap className="inline mr-2" size={24} />
-              Start Your Journey Today
+              <Sparkles className="inline w-6 h-6 mr-3" />
+              Get Started Free
+              <ArrowRight className="inline ml-3 w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </Button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-dark text-white py-12 px-4 border-t border-primary/30">
+      <footer className="bg-primary text-white py-16 px-4 border-t border-accent/20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
-                  <Sparkles className="w-6 h-6 text-white animate-pulse" />
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div className="md:col-span-1">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-accent to-secondary rounded-2xl flex items-center justify-center shadow-lg">
+                  <Sparkles className="w-7 h-7 text-white" />
                 </div>
-                <span className="text-2xl font-bold">Career Catalyst</span>
+                <span className="text-3xl font-bold">Career Catalyst</span>
               </div>
-              <p className="text-gray-400">Empowering careers through AI-driven insights</p>
+              <p className="text-gray-300 leading-relaxed">
+                AI-powered career guidance platform
+              </p>
             </div>
             
-            <div>
-              <h3 className="font-bold mb-4 text-secondary">Product</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/signup" className="hover:text-secondary transition-colors">Features</Link></li>
-                <li><Link to="/signup" className="hover:text-secondary transition-colors">Pricing</Link></li>
-                <li><Link to="/signup" className="hover:text-secondary transition-colors">Resources</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-bold mb-4 text-secondary">Company</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/" className="hover:text-secondary transition-colors">About</Link></li>
-                <li><Link to="/" className="hover:text-secondary transition-colors">Blog</Link></li>
-                <li><Link to="/" className="hover:text-secondary transition-colors">Careers</Link></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-bold mb-4 text-secondary">Legal</h3>
-              <ul className="space-y-2 text-gray-400">
-                <li><Link to="/" className="hover:text-secondary transition-colors">Privacy</Link></li>
-                <li><Link to="/" className="hover:text-secondary transition-colors">Terms</Link></li>
-                <li><Link to="/" className="hover:text-secondary transition-colors">Contact</Link></li>
-              </ul>
-            </div>
+            {[
+              { title: 'Product', links: ['Features', 'Pricing', 'How it Works'] },
+              { title: 'Resources', links: ['Blog', 'Help Center', 'API Docs'] },
+              { title: 'Company', links: ['About', 'Careers', 'Contact'] }
+            ].map((section, idx) => (
+              <div key={idx}>
+                <h3 className="font-bold mb-6 text-secondary text-sm uppercase tracking-wider">
+                  {section.title}
+                </h3>
+                <ul className="space-y-4">
+                  {section.links.map((link, i) => (
+                    <li key={i}>
+                      <Link 
+                        to="/" 
+                        className="text-gray-300 hover:text-white transition-colors inline-flex items-center group"
+                      >
+                        {link}
+                        <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all ml-1" />
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
           
-          <div className="border-t border-primary/30 pt-8 text-center">
-            <p className="text-sm text-gray-500">© 2025 Career Catalyst. All rights reserved. Made with ✨ magic</p>
+          <div className="border-t border-accent/20 pt-8 text-center">
+            <p className="text-sm text-gray-400">
+              © 2026 Career Catalyst. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>
 
       <style jsx>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
+          0%, 100% { 
+            transform: translateY(0px) rotate(0deg); 
+          }
+          33% { 
+            transform: translateY(-20px) rotate(1deg); 
+          }
+          66% { 
+            transform: translateY(-10px) rotate(-1deg); 
+          }
         }
         
-        @keyframes twinkle {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        
-        @keyframes shimmer {
-          0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
+        .animate-float {
+          animation: float 8s ease-in-out infinite;
         }
       `}</style>
     </div>

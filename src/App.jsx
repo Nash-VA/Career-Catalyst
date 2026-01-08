@@ -12,7 +12,7 @@ import Dashboard from './pages/Dashboard';
 import CareerRecommendation from './pages/CareerRecommendation';
 import SkillGapAnalysis from './pages/SkillGapAnalysis';
 import LearningRoadmap from './pages/LearningRoadmap';
-import CourseRecommendation from './pages/CourseRecommendation';
+import CourseRecommendation from './pages/CareerRecommendation';
 import InterviewPrep from './pages/InterviewPrep';
 
 const ProtectedRoute = ({ children }) => {
@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <UserProvider>
           <Routes>

@@ -1,0 +1,32 @@
+{
+  "Full Stack Developer": {
+    "description": "Build complete web applications from front-end to back-end using modern technologies",
+    "required_skills": ["JavaScript", "React", "Node.js", "MongoDB", "REST API", "Git", "HTML", "CSS"],
+    "keywords": ["javascript", "react", "node", "web", "frontend", "backend", "fullstack"],
+    "icon": "computer"
+  },
+  "Data Scientist": {
+    "description": "Analyze complex data sets and build predictive models using machine learning",
+    "required_skills": ["Python", "Machine Learning", "SQL", "Statistics", "Pandas", "NumPy"],
+    "keywords": ["python", "data", "machine learning", "ml", "ai", "statistics"],
+    "icon": "chart"
+  },
+  "UX/UI Designer": {
+    "description": "Create user-centered digital experiences and beautiful interfaces",
+    "required_skills": ["Figma", "Adobe XD", "User Research", "Prototyping", "HTML", "CSS"],
+    "keywords": ["design", "ui", "ux", "figma", "adobe", "creative"],
+    "icon": "design"
+  },
+  "DevOps Engineer": {
+    "description": "Automate and optimize software deployment and infrastructure",
+    "required_skills": ["Docker", "Kubernetes", "AWS", "CI/CD", "Linux", "Jenkins"],
+    "keywords": ["devops", "docker", "kubernetes", "aws", "cloud", "automation"],
+    "icon": "tools"
+  },
+  "Mobile App Developer": {
+    "description": "Create native and cross-platform mobile applications",
+    "required_skills": ["React Native", "Flutter", "Swift", "Kotlin", "Firebase", "REST API"],
+    "keywords": ["mobile", "react native", "flutter", "ios", "android", "app"],
+    "icon": "mobile"
+  }
+}
