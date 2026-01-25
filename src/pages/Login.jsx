@@ -254,7 +254,7 @@ const Login = () => {
         </div>
 
         {/* Demo Account Info */}
-        <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-100 rounded-xl p-4 mb-6">
+        {/* <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-100 rounded-xl p-4 mb-6">
           <div className="flex items-start gap-3">
             <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
               <Sparkles className="w-5 h-5 text-blue-600" />
@@ -270,7 +270,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Footer Links */}
         <div className="text-center space-y-4">

@@ -221,7 +221,7 @@ const LandingPage = () => {
                     <ArrowRight className="inline ml-2 w-5 h-5 group-hover:translate-x-2 transition-transform duration-300 relative" />
                   </Button>
                 </Link>
-                <Link to="/login">
+                {/* <Link to="/login">
                   <Button 
                     size="lg"
                     variant="outline"
@@ -231,7 +231,7 @@ const LandingPage = () => {
                     <Play className="inline mr-2 w-5 h-5 group-hover:scale-125 transition-transform duration-300 relative z-10" />
                     <span className="relative z-10">Watch Demo</span>
                   </Button>
-                </Link>
+                </Link> */}
               </div>
 
               {/* Stats Row */}

@@ -1,6 +1,46 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const UserContext = createContext();
+
+export const UserProvider = ({ children }) => {
+  // Load from localStorage on mount
+  const [userData, setUserData] = useState(() => {
+    const saved = localStorage.getItem('careerCatalystUserData');
+    return saved ? JSON.parse(saved) : {
+      interests: [],
+      skills: [],
+      education: '',
+      experience: '',
+      recommendedCareer: null
+    };
+  });
+
+  // Save to localStorage whenever userData changes
+  useEffect(() => {
+    localStorage.setItem('careerCatalystUserData', JSON.stringify(userData));
+  }, [userData]);
+
+  const updateUserData = (newData) => {
+    setUserData(prev => ({ ...prev, ...newData }));
+  };
+
+  const clearUserData = () => {
+    setUserData({
+      interests: [],
+      skills: [],
+      education: '',
+      experience: '',
+      recommendedCareer: null
+    });
+    localStorage.removeItem('careerCatalystUserData');
+  };
+
+  return (
+    <UserContext.Provider value={{ userData, updateUserData, clearUserData }}>
+      {children}
+    </UserContext.Provider>
+  );
+};
 
 export const useUser = () => {
   const context = useContext(UserContext);
@@ -10,35 +50,4 @@ export const useUser = () => {
   return context;
 };
 
-export const UserProvider = ({ children }) => {
-  const [userData, setUserData] = useState({
-    education: '',
-    skills: [],
-    interests: [],
-    careerGoals: '',
-    expectedSalary: '',
-    resume: null,
-    careerRecommendations: [],
-    skillGaps: [],
-    completedOnboarding: false
-  });
-
-  useEffect(() => {
-    const saved = localStorage.getItem('userData');
-    if (saved) {
-      setUserData(JSON.parse(saved));
-    }
-  }, []);
-
-  const updateUserData = (data) => {
-    const updated = { ...userData, ...data };
-    setUserData(updated);
-    localStorage.setItem('userData', JSON.stringify(updated));
-  };
-
-  return (
-    <UserContext.Provider value={{ userData, updateUserData }}>
-      {children}
-    </UserContext.Provider>
-  );
-};
+export default UserContext;

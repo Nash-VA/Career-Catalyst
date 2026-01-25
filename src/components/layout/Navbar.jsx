@@ -5,20 +5,24 @@ import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../context/UserContext';
 import Button from '../common/Button';
 
+
 const Navbar = ({ transparent = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, logout } = useAuth();
-  const { userData } = useUser();
+  const { userData, clearUserData } = useUser();
   const navigate = useNavigate();
   const profileRef = useRef(null);
 
+
   const handleLogout = () => {
     logout();
+    clearUserData(); // ✅ ADDED: Clear career data on logout
     setIsProfileOpen(false);
     navigate('/');
   };
+
 
   // Track scroll position
   useEffect(() => {
@@ -29,6 +33,7 @@ const Navbar = ({ transparent = false }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -36,201 +41,185 @@ const Navbar = ({ transparent = false }) => {
         setIsProfileOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
 
   const userName = user?.name || user?.email?.split('@')[0] || 'User';
   const userEmail = user?.email || '';
   const careerTitle = userData?.recommendedCareer?.title || 'Not set yet';
 
-  // Always show solid navbar if not in transparent mode OR if scrolled
+
   const shouldBeTransparent = transparent && !scrolled;
 
-  return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-      shouldBeTransparent 
-        ? 'bg-white/5 backdrop-blur-sm' 
-        : 'bg-white shadow-lg'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <Link to={user ? '/dashboard' : '/'} className="flex items-center gap-3 group">
-            {/* Sparkles Logo */}
-            <div className="w-11 h-11 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center shadow-lg transform group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            {/* Brand Name */}
-            <span className={`text-2xl font-bold transition-colors duration-300 ${
-              shouldBeTransparent 
-                ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
-                : 'text-primary'
-            } group-hover:text-accent`}>
-              Career Catalyst
-            </span>
-          </Link>
 
-          {/* Desktop Menu */}
+  return (
+    <nav 
+      className={`sticky top-0 z-50 transition-all duration-300 ${
+        shouldBeTransparent 
+          // NEW (Fully transparent)
+? 'bg-transparent'
+
+          : 'bg-white shadow-md'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo Section - IMPROVED */}
+          {/* AFTER - WITH SPIN ANIMATION */}
+<Link 
+  to="/" // ✅ Always goes to landing page
+  className="flex items-center space-x-2 group"
+>
+  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 ${
+    shouldBeTransparent 
+      ? 'bg-primary shadow-lg' 
+      : 'bg-primary'
+  } group-hover:scale-110`}>
+    <Sparkles className="w-6 h-6 text-white group-hover:animate-spin transition-transform" />
+    {/* ✅ Added: group-hover:animate-spin */}
+  </div>
+  <span className={`text-xl font-bold transition-colors duration-300 ${
+    shouldBeTransparent 
+      ? 'text-gray-900' 
+      : 'text-primary'
+  }`}>
+    Career Catalyst
+  </span>
+</Link>
+
+
+
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {user ? (
               <>
                 <Link 
                   to="/dashboard" 
-                  className={`transition-all duration-300 px-4 py-2 font-semibold rounded-lg relative group ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                      ? 'text-gray-700 hover:bg-gray-100' // ✅ FIXED: Visible
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Dashboard
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
                 <Link 
                   to="/skills" 
-                  className={`transition-all duration-300 px-4 py-2 font-semibold rounded-lg relative group ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Skills
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
                 <Link 
                   to="/roadmap" 
-                  className={`transition-all duration-300 px-4 py-2 font-semibold rounded-lg relative group ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Roadmap
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
                 <Link 
                   to="/courses" 
-                  className={`transition-all duration-300 px-4 py-2 font-semibold rounded-lg relative group ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Courses
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
                 <Link 
                   to="/interview" 
-                  className={`transition-all duration-300 px-4 py-2 font-semibold rounded-lg relative group ${
+                  className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
                     shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
+                      ? 'text-gray-700 hover:bg-gray-100'
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
                   Interview
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></span>
                 </Link>
 
+
                 {/* Profile Dropdown */}
-                <div className="relative ml-2" ref={profileRef}>
+                <div className="relative ml-3" ref={profileRef}>
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-xl transition-all duration-300 ${
-                      shouldBeTransparent 
-                        ? 'hover:bg-white/20' 
+                      shouldBeTransparent
+                        ? 'hover:bg-gray-100'
                         : 'hover:bg-gray-100'
                     }`}
                   >
-                    <div className="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center text-white font-bold shadow-lg ring-2 ring-white/20">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${ shouldBeTransparent 
+                        ? 'bg-primary text-white' // ✅ FIXED: Solid avatar
+                        : 'bg-primary text-white'
+                    }`}>
                       {userName.charAt(0).toUpperCase()}
                     </div>
-                    <span className={`font-semibold ${
-                      shouldBeTransparent 
-                        ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' 
-                        : 'text-gray-700'
+                    <span className={`font-medium ${
+                      shouldBeTransparent ? 'text-gray-700' : 'text-gray-700'
                     }`}>
                       {userName}
                     </span>
                   </button>
 
-                  {/* Dropdown Menu */}
+
+                  {/* Dropdown Menu (unchanged) */}
                   {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden animate-slide-down z-50">
-                      {/* User Info Section */}
-                      <div className="bg-gradient-to-br from-primary to-accent p-5 text-white">
-                        <div className="flex items-center gap-3 mb-3">
-                          <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-xl backdrop-blur-sm ring-2 ring-white/30">
+                    <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg py-2 border border-gray-200 animate-slide-up">
+                      <div className="px-4 py-3 border-b border-gray-200">
+                        <div className="flex items-center gap-3 mb-2">
+                          <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg">
                             {userName.charAt(0).toUpperCase()}
                           </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-lg">{userName}</h3>
-                            <p className="text-secondary text-sm">{userEmail}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-gray-900 truncate">{userName}</p>
+                            <p className="text-sm text-gray-500 truncate">{userEmail}</p>
                           </div>
                         </div>
-                        <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
-                          <p className="text-xs text-secondary mb-1">Career Goal</p>
-                          <p className="text-sm font-semibold">{careerTitle}</p>
+                        <div className="mt-2 px-3 py-1.5 bg-blue-50 rounded-lg">
+                          <p className="text-xs text-gray-600 font-medium">Career Goal</p>
+                          <p className="text-sm text-primary font-semibold truncate">{careerTitle}</p>
                         </div>
                       </div>
 
-                      {/* Menu Items */}
-                      <div className="py-2">
-                        <Link
-                          to="/dashboard"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                            <TrendingUp className="w-5 h-5 text-blue-600" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-gray-900 text-sm">Dashboard</p>
-                            <p className="text-xs text-gray-500">View your progress</p>
-                          </div>
-                        </Link>
+                      <Link to="/dashboard" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                        <TrendingUp size={18} className="text-primary" />
+                        <div>
+                          <p className="font-medium text-gray-900">Dashboard</p>
+                          <p className="text-xs text-gray-500">View your progress</p>
+                        </div>
+                      </Link>
 
-                        <Link
-                          to="/resume-upload"
-                          className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                            <FileText className="w-5 h-5 text-purple-600" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-semibold text-gray-900 text-sm">Update Resume</p>
-                            <p className="text-xs text-gray-500">Modify your profile</p>
-                          </div>
-                        </Link>
+                      <Link to="/resume-upload" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                        <FileText size={18} className="text-primary" />
+                        <div>
+                          <p className="font-medium text-gray-900">Update Resume</p>
+                          <p className="text-xs text-gray-500">Modify your profile</p>
+                        </div>
+                      </Link>
 
-                        <button
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-50 transition-colors group"
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                          }}
-                        >
-                          <div className="w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center group-hover:bg-gray-100 transition-colors">
-                            <Settings className="w-5 h-5 text-gray-600" />
-                          </div>
-                          <div className="flex-1 text-left">
-                            <p className="font-semibold text-gray-900 text-sm">Settings</p>
-                            <p className="text-xs text-gray-500">Account preferences</p>
-                          </div>
-                        </button>
-                      </div>
+                      <button onClick={() => { alert('Settings feature coming soon!'); setIsProfileOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                        <Settings size={18} className="text-primary" />
+                        <div className="text-left">
+                          <p className="font-medium text-gray-900">Settings</p>
+                          <p className="text-xs text-gray-500">Account preferences</p>
+                        </div>
+                      </button>
 
-                      {/* Logout Button */}
-                      <div className="border-t border-gray-200 p-2">
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-50 transition-colors rounded-xl group"
-                        >
-                          <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                            <LogOut className="w-5 h-5 text-red-600" />
-                          </div>
-                          <div className="flex-1 text-left">
-                            <p className="font-semibold text-red-600 text-sm">Logout</p>
-                            <p className="text-xs text-red-400">Sign out of your account</p>
+                      <div className="border-t border-gray-200 mt-2 pt-2">
+                        <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-2.5 text-red-600 hover:bg-red-50 transition-colors">
+                          <LogOut size={18} />
+                          <div className="text-left">
+                            <p className="font-medium">Logout</p>
+                            <p className="text-xs text-red-500">Sign out of your account</p>
                           </div>
                         </button>
                       </div>
@@ -240,110 +229,91 @@ const Navbar = ({ transparent = false }) => {
               </>
             ) : (
               <>
-                <Link 
-                  to="/login" 
-                  className={`transition-all duration-300 px-5 py-2.5 font-semibold rounded-lg ${
-                    shouldBeTransparent
-                      ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20'
-                      : 'text-gray-700 hover:text-primary hover:bg-gray-50'
-                  }`}
-                >
-                  Login
+                <Link to="/login">
+                  <Button 
+                    variant="ghost" 
+                    className={shouldBeTransparent 
+                      ? 'bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white shadow-md' // ✅ FIXED
+                      : ''
+                    }
+                  >
+                    Login
+                  </Button>
                 </Link>
                 <Link to="/signup">
                   <Button 
-                    className="bg-primary hover:bg-accent text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 font-semibold px-6 py-2.5 rounded-lg"
+                    className={shouldBeTransparent 
+                      ? 'bg-primary text-white hover:bg-primary/90 shadow-md' // ✅ FIXED
+                      : ''
+                    }
                   >
-                    Sign Up
+                    Get Started
                   </Button>
                 </Link>
               </>
             )}
           </div>
 
+
           {/* Mobile Menu Button */}
-          <button 
-            onClick={() => setIsOpen(!isOpen)} 
+          <button
+            onClick={() => setIsOpen(!isOpen)}
             className={`md:hidden p-2.5 rounded-xl transition-all duration-300 ${
-              shouldBeTransparent 
-                ? 'text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/20' 
+              shouldBeTransparent
+                ? 'text-gray-900 hover:bg-gray-100 bg-white/80 shadow-sm' // ✅ FIXED
                 : 'text-gray-700 hover:bg-gray-100'
             }`}
           >
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden pb-4 animate-slide-down bg-white rounded-b-2xl mt-2 shadow-xl border-t border-gray-100">
-            {user ? (
-              <div className="flex flex-col space-y-1 p-4">
-                {/* Mobile Profile Info */}
-                <div className="bg-gradient-to-br from-primary to-accent p-4 rounded-xl text-white mb-3 shadow-lg">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white font-bold text-lg ring-2 ring-white/30">
-                      {userName.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">{userName}</h3>
-                      <p className="text-secondary text-sm">{userEmail}</p>
-                    </div>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-2.5">
-                    <p className="text-xs text-secondary">Career Goal</p>
-                    <p className="text-sm font-semibold">{careerTitle}</p>
-                  </div>
-                </div>
-
-                <Link to="/dashboard" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  📊 Dashboard
-                </Link>
-                <Link to="/skills" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  ⚡ Skills
-                </Link>
-                <Link to="/roadmap" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  🗺️ Roadmap
-                </Link>
-                <Link to="/courses" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  📚 Courses
-                </Link>
-                <Link to="/interview" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  💼 Interview
-                </Link>
-                <Link to="/resume-upload" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all" onClick={() => setIsOpen(false)}>
-                  📄 Update Resume
-                </Link>
-                <div className="border-t border-gray-200 my-2"></div>
-                <button 
-                  onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                  }} 
-                  className="py-3 px-4 text-left text-red-600 hover:bg-red-50 rounded-lg font-semibold transition-all"
-                >
-                  🚪 Logout
-                </button>
-              </div>
-            ) : (
-              <div className="flex flex-col space-y-3 p-4">
-                <Link to="/login" className="py-3 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-semibold transition-all text-center" onClick={() => setIsOpen(false)}>
-                  Login
-                </Link>
-                <Link to="/signup" onClick={() => setIsOpen(false)}>
-                  <Button 
-                    className="w-full bg-primary hover:bg-accent text-white shadow-lg font-semibold py-3"
-                  >
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        )}
       </div>
+
+
+      {/* Mobile Menu (unchanged) */}
+      {isOpen && (
+        <div className="md:hidden bg-white border-t border-gray-200 shadow-lg">
+          {user ? (
+            <div className="px-4 py-4 space-y-3">
+              <div className="flex items-center gap-3 pb-3 border-b border-gray-200">
+                <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-bold text-lg">
+                  {userName.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 truncate">{userName}</p>
+                  <p className="text-sm text-gray-500 truncate">{userEmail}</p>
+                </div>
+              </div>
+
+              <div className="px-3 py-2 bg-blue-50 rounded-lg">
+                <p className="text-xs text-gray-600 font-medium">Career Goal</p>
+                <p className="text-sm text-primary font-semibold">{careerTitle}</p>
+              </div>
+
+              <Link to="/dashboard" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">📊 Dashboard</Link>
+              <Link to="/skills" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">⚡ Skills</Link>
+              <Link to="/roadmap" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">🗺️ Roadmap</Link>
+              <Link to="/courses" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">📚 Courses</Link>
+              <Link to="/interview" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">💼 Interview</Link>
+              <Link to="/resume-upload" onClick={() => setIsOpen(false)} className="block py-3 px-4 text-left text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition-all">📄 Update Resume</Link>
+
+              <button onClick={() => { handleLogout(); setIsOpen(false); }} className="w-full py-3 px-4 text-left text-red-600 hover:bg-red-50 rounded-lg font-semibold transition-all">🚪 Logout</button>
+            </div>
+          ) : (
+            <div className="px-4 py-4 space-y-3">
+              <Link to="/login" onClick={() => setIsOpen(false)}>
+                <Button variant="ghost" className="w-full">Login</Button>
+              </Link>
+              <Link to="/signup" onClick={() => setIsOpen(false)}>
+                <Button className="w-full">Get Started</Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 };
+
 
 export default Navbar;
