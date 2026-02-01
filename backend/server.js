@@ -18,9 +18,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 .then(() => console.log('✅ MongoDB connected'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// Routes
+// Routes - VERIFY ALL FOUR ARE HERE
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/user', require('./routes/user'));
+app.use('/api/user', require('./routes/user'));  // ← Must have this
 app.use('/api/resume', require('./routes/resume'));
 app.use('/api/recommendation', require('./routes/recommendation'));
 
@@ -37,5 +37,13 @@ app.use((err, req, res, next) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log('='.repeat(50));
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log('✅ Routes loaded:');
+  console.log('   POST /api/auth/signup');
+  console.log('   POST /api/auth/login');
+  console.log('   GET  /api/auth/me');
+  console.log('   PUT  /api/user/update-onboarding  ← Check this');
+  console.log('   POST /api/recommendation/generate');
+  console.log('='.repeat(50));
 });

@@ -12,7 +12,7 @@ import Dashboard from './pages/Dashboard';
 import CareerRecommendation from './pages/CareerRecommendation';
 import SkillGapAnalysis from './pages/SkillGapAnalysis';
 import LearningRoadmap from './pages/LearningRoadmap';
-import CourseRecommendation from './pages/CareerRecommendation';
+import CourseRecommendation from './pages/CourseRecommendation';
 import InterviewPrep from './pages/InterviewPrep';
 
 const ProtectedRoute = ({ children }) => {

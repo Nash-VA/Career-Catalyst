@@ -20,26 +20,66 @@ const LearningRoadmap = () => {
 
       try {
         setLoading(true);
+
+        // ✅ Check cache first (15 min expiry)
+        const cacheKey = `roadmap_${career.title}_${JSON.stringify(career.currentSkills || [])}`;
+        const cached = localStorage.getItem(cacheKey);
+        const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+        
+        const now = Date.now();
+        const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+
+        if (cached && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
+          console.log('✅ Using cached roadmap');
+          setRoadmap(JSON.parse(cached));
+          setLoading(false);
+          return;
+        }
+
+        console.log('🔄 Fetching fresh roadmap from AI...');
+
+        // ✅ Reduce timeout and add abort controller
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+
         const response = await fetch('http://localhost:5001/api/learning-roadmap', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache'
+          },
           body: JSON.stringify({
             career_title: career.title,
-            current_skills: career.currentSkills || [],
-            skill_gaps: career.skillGap || [],
-            required_skills: career.requiredSkills || []
-          })
+            current_skills: (career.currentSkills || []).slice(0, 5), // ✅ Limit data sent
+            skill_gaps: (career.skillGap || []).slice(0, 6),
+            required_skills: (career.requiredSkills || []).slice(0, 6)
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         const data = await response.json();
         
         if (data.success && data.roadmap) {
+          console.log('✅ AI roadmap received');
+          
+          // ✅ Cache the result
+          localStorage.setItem(cacheKey, JSON.stringify(data.roadmap));
+          localStorage.setItem(`${cacheKey}_time`, now.toString());
+          
           setRoadmap(data.roadmap);
         } else {
-          setRoadmap(generateFallbackRoadmap());
+          console.warn('⚠️ AI failed, using fallback');
+          const fallback = generateFallbackRoadmap();
+          setRoadmap(fallback);
         }
       } catch (error) {
-        console.error('Failed to fetch AI roadmap:', error);
+        if (error.name === 'AbortError') {
+          console.error('❌ Request timeout - using fallback');
+        } else {
+          console.error('❌ Failed to fetch AI roadmap:', error);
+        }
         setRoadmap(generateFallbackRoadmap());
       } finally {
         setLoading(false);
@@ -62,8 +102,8 @@ const LearningRoadmap = () => {
           title: 'Foundation Skills',
           duration: '2-3 months',
           status: hasSkills.length > 0 ? 'completed' : 'in-progress',
-          skills: hasSkills.length > 0 ? hasSkills.slice(0, 3) : ['Start with basics', 'Build fundamentals'],
-          description: 'Master the fundamental concepts and tools required for this career path.',
+          skills: hasSkills.length > 0 ? hasSkills.slice(0, 3) : ['HTML', 'CSS', 'JavaScript'],
+          description: 'In these first few months, you\'ll get comfortable with the basic tools used every day. You\'ll set up your code editor, learn Git to save your work, and understand how things actually work under the hood.',
           learning_objectives: [
             'Understand core concepts and terminology',
             'Set up development environment',
@@ -77,7 +117,7 @@ const LearningRoadmap = () => {
           duration: '3-4 months',
           status: hasSkills.length >= 3 ? 'in-progress' : 'upcoming',
           skills: missingSkills.slice(0, 3),
-          description: 'Learn the essential technologies and frameworks used in the industry.',
+          description: 'Now things get interesting. You\'ll dive into the main frameworks and tools. This is where you start building actual working applications from scratch and see everything come together.',
           learning_objectives: [
             'Build intermediate-level projects',
             'Understand best practices',
@@ -90,8 +130,8 @@ const LearningRoadmap = () => {
           title: 'Advanced Concepts',
           duration: '3-4 months',
           status: 'upcoming',
-          skills: missingSkills.slice(3, 6).length > 0 ? missingSkills.slice(3, 6) : ['Advanced patterns', 'Performance optimization'],
-          description: 'Dive deep into advanced topics, patterns, and specializations.',
+          skills: missingSkills.slice(3, 6).length > 0 ? missingSkills.slice(3, 6) : ['Advanced patterns', 'Performance optimization', 'System design'],
+          description: 'Time to level up. You\'ll tackle complex problems, learn advanced patterns, and optimize for performance. This is what separates good developers from great ones.',
           learning_objectives: [
             'Master complex problem-solving',
             'Learn advanced design patterns',
@@ -104,8 +144,8 @@ const LearningRoadmap = () => {
           title: 'Professional Practice',
           duration: '2-3 months',
           status: 'upcoming',
-          skills: ['Portfolio Projects', 'Open Source Contributions', 'Professional Networking'],
-          description: 'Apply your knowledge through real-world projects and professional engagement.',
+          skills: ['Portfolio Projects', 'Open Source', 'Networking'],
+          description: 'Final stretch! Build a killer portfolio, contribute to real projects, and network with professionals. This is where learning meets landing a job.',
           learning_objectives: [
             'Build a professional portfolio',
             'Contribute to real projects',
@@ -132,19 +172,19 @@ const LearningRoadmap = () => {
     );
   }
 
-if (loading) {
-  return (
-    <div className="min-h-screen bg-light">
-      <Navbar />
-      <div className="max-w-7xl mx-auto px-4">
-        <Loading 
-          message="Generating Your Roadmap..." 
-          submessage="Creating a personalized learning path"
-        />
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-light">
+        <Navbar />
+        <div className="max-w-7xl mx-auto px-4">
+          <Loading 
+            message="Generating Your Roadmap..." 
+            submessage="Creating a personalized learning path"
+          />
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 
   if (!roadmap) return null;
 

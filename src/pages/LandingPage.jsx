@@ -75,7 +75,7 @@ const LandingPage = () => {
       title: 'Personalized Roadmap',
       description: 'Step-by-step learning paths with milestones, curated resources, and progress tracking.',
       gradient: 'from-dark via-primary to-accent',
-      stat: '3-month plans'
+      stat: ' plan'
     },
     {
       icon: Award,
@@ -132,10 +132,10 @@ const LandingPage = () => {
   ];
 
   const stats = [
-    { value: '10K+', label: 'Active Users', icon: Users },
-    { value: '95%', label: 'Success Rate', icon: Target },
-    { value: '500+', label: 'Career Paths', icon: Rocket },
-    { value: '4.9/5', label: 'User Rating', icon: Star }
+    // { value: '10K+', label: 'Active Users', icon: Users },
+    // { value: '95%', label: 'Success Rate', icon: Target },
+    // { value: '500+', label: 'Career Paths', icon: Rocket },
+    // { value: '4.9/5', label: 'User Rating', icon: Star }
   ];
 
   return (

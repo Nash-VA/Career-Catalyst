@@ -25,7 +25,9 @@ api.interceptors.request.use(
 
 export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
-  login: (data) => api.post('/auth/login', data)
+  login: (data) => api.post('/auth/login', data),
+  getCurrentUser: () => api.get('/auth/me')
+  
 };
 
 export const userAPI = {

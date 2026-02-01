@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const authMiddleware = require('../middleware/auth');
-const mlService = require('../services/mlService');
+const aiRecommendation = require('../services/aiRecommendation');
 
-// Generate recommendations
+// Generate AI-powered recommendations
 router.post('/generate', authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
     
-    // Prepare user data
-    const userData = {
+    // Prepare user profile
+    const userProfile = {
       skills: [
         ...(user.resume?.parsedData?.skills || []),
         ...(user.onboardingData?.skills || [])
@@ -25,11 +25,12 @@ router.post('/generate', authMiddleware, async (req, res) => {
       experience: user.onboardingData?.experience || 'Fresher'
     };
     
-    console.log('Generating recommendation for user:', user.email);
-    console.log('User data:', userData);
+    console.log('🤖 Generating AI recommendations for:', user.email);
+    console.log('   Skills:', userProfile.skills.slice(0, 5));
+    console.log('   Interests:', userProfile.interests.slice(0, 3));
     
-    // Get recommendations from ML service
-    const recommendations = await mlService.generateRecommendations(userData);
+    // Get AI-powered recommendations
+    const recommendations = aiRecommendation.getRecommendations(userProfile, 3);
     
     // Save primary recommendation
     if (recommendations && recommendations.length > 0) {
@@ -37,8 +38,11 @@ router.post('/generate', authMiddleware, async (req, res) => {
         ...recommendations[0],
         generatedAt: new Date()
       };
-      user.updatedAt = new Date();
+      user.onboardingData.completedOnboarding = true;
       await user.save();
+      
+      console.log('✅ Recommendation saved:', recommendations[0].title);
+      console.log('   Match Score:', recommendations[0].matchScore + '%');
     }
     
     res.json({
@@ -46,27 +50,14 @@ router.post('/generate', authMiddleware, async (req, res) => {
       recommendation: recommendations[0],
       alternatives: recommendations.slice(1)
     });
+    
   } catch (error) {
-    console.error('Recommendation generation error:', error);
+    console.error('❌ Recommendation error:', error);
     res.status(500).json({ 
+      success: false,
       message: 'Error generating recommendation', 
       error: error.message 
     });
-  }
-});
-
-// Get user's recommendation
-router.get('/my-recommendation', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId);
-    
-    if (!user || !user.recommendedCareer) {
-      return res.status(404).json({ message: 'No recommendation found' });
-    }
-    
-    res.json({ success: true, recommendation: user.recommendedCareer });
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching recommendation', error: error.message });
   }
 });
 

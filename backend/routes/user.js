@@ -19,34 +19,33 @@ router.get('/profile', authMiddleware, async (req, res) => {
 });
 
 // Update onboarding data
-router.post('/onboarding', authMiddleware, async (req, res) => {
+router.put('/update-onboarding', authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
+    const { onboardingData } = req.body;
     
+    const user = await User.findById(req.userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ success: false, message: 'User not found' });
     }
     
+    // Update onboarding data
     user.onboardingData = {
-      ...req.body,
-      completedOnboarding: true
+      ...user.onboardingData,
+      ...onboardingData
     };
-    user.updatedAt = new Date();
     
     await user.save();
     
-    res.json({ 
-      success: true, 
-      message: 'Onboarding completed',
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        onboardingData: user.onboardingData
-      }
-    });
+    console.log('✅ Onboarding data updated for:', user.email);
+    
+    res.json({ success: true, message: 'Onboarding data saved' });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating profile', error: error.message });
+    console.error('❌ Update onboarding error:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Failed to save onboarding data',
+      error: error.message 
+    });
   }
 });
 

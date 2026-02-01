@@ -10,7 +10,7 @@ const UserSchema = new mongoose.Schema({
     filename: String,
     uploadDate: Date,
     parsedData: {
-      skills: [String],
+      skills: { type: [String], default: [] },
       education: String,
       experience: String,
       summary: String
@@ -20,12 +20,12 @@ const UserSchema = new mongoose.Schema({
   // Onboarding Data
   onboardingData: {
     completedOnboarding: { type: Boolean, default: false },
-    fieldOfStudy: String,
-    experience: String,
-    interests: [String],
-    careerGoals: String,
-    skills: [String],
-    preferredIndustries: [String]
+    fieldOfStudy: { type: String, default: '' },
+    experience: { type: String, default: '' },
+    interests: { type: [String], default: [] },
+    careerGoals: { type: String, default: '' },
+    skills: { type: [String], default: [] },
+    preferredIndustries: { type: [String], default: [] }
   },
   
   // Career Recommendation
@@ -43,6 +43,12 @@ const UserSchema = new mongoose.Schema({
   
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
+});
+
+// ✅ Update timestamp on save
+UserSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
 });
 
 module.exports = mongoose.model('User', UserSchema);
