@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Clock, Award, Filter, Search, BookOpen, TrendingUp, ExternalLink, Users, RefreshCw, Zap, DollarSign, X, CheckCircle } from 'lucide-react';
+import { Star, Clock, Award, Filter, Search, BookOpen, TrendingUp, ExternalLink, Users, RefreshCw, Zap, DollarSign, X, CheckCircle, Sparkles } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 import Navbar from '../components/layout/Navbar';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
-
+import Loading from '../components/common/Loading'; // Ensure this path is correct for your project
 
 const CourseRecommendation = () => {
   const { userData } = useUser();
@@ -100,7 +100,6 @@ const CourseRecommendation = () => {
             };
           });
 
-          console.log('✅ Courses loaded with URLs:', enhancedCourses.map(c => ({ title: c.title, url: c.url })));
           setCourses(enhancedCourses);
           setFilteredCourses(enhancedCourses);
         } else {
@@ -310,21 +309,10 @@ const CourseRecommendation = () => {
       event.stopPropagation();
     }
     
-    console.log('🔗 Opening course:', url);
-    
-    if (!url || url === '#') {
-      console.warn('⚠️ Invalid URL');
-      return;
-    }
+    if (!url || url === '#') return;
     
     try {
-      const opened = window.open(url, '_blank', 'noopener,noreferrer');
-      if (!opened || opened.closed || typeof opened.closed === 'undefined') {
-        console.error('❌ Popup blocked');
-        console.log('Please allow popups to view courses');
-      } else {
-        console.log('✅ Course opened successfully');
-      }
+      window.open(url, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Error opening course:', error);
     }
@@ -422,11 +410,11 @@ const CourseRecommendation = () => {
                 size="sm"
                 onClick={fetchAIInsights}
                 disabled={insightsLoading}
-                className="flex items-center gap-2 border-blue-200 text-blue-700 hover:bg-blue-100 bg-white"
+                className="flex items-center gap-2 border-blue-200 text-blue-700 hover:bg-blue-100 bg-white min-w-[140px]"
               >
                 {insightsLoading ? (
                   <>
-                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
                     <span>Analyzing...</span>
                   </>
                 ) : (
@@ -557,11 +545,13 @@ const CourseRecommendation = () => {
         </Card>
 
 
-        {/* Loading State */}
+        {/* Loading State using Custom Loading Component */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <RefreshCw className="w-12 h-12 text-primary animate-spin mb-4" />
-            <p className="text-gray-600 text-lg">Loading AI-powered course recommendations...</p>
+          <div className="py-20">
+            <Loading 
+              message="Finding Best Courses..." 
+              submessage="AI is curating your personalized learning path" 
+            />
           </div>
         ) : (
           <>

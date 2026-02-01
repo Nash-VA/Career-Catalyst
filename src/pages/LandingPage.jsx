@@ -452,10 +452,10 @@ const LandingPage = () => {
                       {feature.description}
                     </p>
                     
-                    <div className="flex items-center text-accent opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
+                    {/* <div className="flex items-center text-accent opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-2 group-hover:translate-y-0">
                       <span className="text-sm font-semibold">Learn more</span>
                       <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
-                    </div>
+                    </div> */}
                   </div>
 
                   {/* Corner Accent with Animation */}

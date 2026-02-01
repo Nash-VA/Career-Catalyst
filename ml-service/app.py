@@ -8,6 +8,8 @@ import time
 import uuid
 from datetime import datetime, timedelta
 from functools import wraps
+import fitz  
+from docx import Document 
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-change-in-production'  # Change this in production
@@ -1216,6 +1218,184 @@ def generate_resume_fallback(career_title, user_name):
         f"Keep your resume to 1 page if you have less than 5 years of experience. Focus on the most impressive, relevant achievements for {career_title} roles."
     ]
 
+# #resume builder
+def extract_text_from_file(file):
+    """
+    Super-Extractor: Handles PDF (via PyMuPDF), DOCX (via python-docx), and TXT.
+    """
+    try:
+        # Reset file pointer to the beginning
+        file.seek(0)
+        filename = file.filename.lower()
+        
+        # CASE 1: PDF Files (Using PyMuPDF - Much better than pypdf)
+        if filename.endswith('.pdf'):
+            # Read file bytes from memory
+            file_bytes = file.read()
+            with fitz.open(stream=file_bytes, filetype="pdf") as doc:
+                text = ""
+                for page in doc:
+                    text += page.get_text()
+            return text.strip()
+
+        # CASE 2: Word Documents (New!)
+        elif filename.endswith('.docx'):
+            doc = Document(file)
+            return "\n".join([para.text for para in doc.paragraphs]).strip()
+
+        # CASE 3: Text Files
+        elif filename.endswith(('.txt', '.md')):
+            return file.read().decode('utf-8').strip()
+
+        else:
+            print(f"❌ Unsupported format: {filename}")
+            return ""
+
+    except Exception as e:
+        print(f"❌ Extraction Error: {e}")
+        return ""
+
+def call_ollama_json(prompt, model=OLLAMA_MODEL):
+    """Helper: AI caller that enforces JSON output"""
+    try:
+        payload = {
+            'model': model,
+            'prompt': prompt,
+            'stream': False,
+            'format': 'json', 
+            'options': {
+                'temperature': 0.3,
+                'num_predict': 1000
+            }
+        }
+        
+        response = requests.post(OLLAMA_API_URL, json=payload, timeout=45)
+        
+        if response.status_code == 200:
+            json_response = response.json()
+            response_text = json_response.get('response', '{}')
+            return json.loads(response_text)
+        else:
+            print(f"⚠️ Ollama API Error: Status {response.status_code}")
+            return None
+    except Exception as e:
+        print(f"❌ AI Call Failed: {e}")
+        return None
+
+# ============================================================
+# 🚀 RESUME ROUTES
+# ============================================================
+
+@app.route('/api/resume/upload-analyze', methods=['POST'])
+def analyze_uploaded_resume():
+    """Analyzes an uploaded resume file"""
+    if 'file' not in request.files:
+        return jsonify({'success': False, 'error': 'No file uploaded'}), 400
+    
+    file = request.files['file']
+    target_role = request.form.get('target_role', 'Developer')
+    
+    # 1. Extract Text (Now using the Super-Extractor)
+    resume_text = extract_text_from_file(file)
+    
+    # Debug Print to confirm it worked
+    print(f"📝 Extracted {len(resume_text)} characters from {file.filename}")
+    
+    if not resume_text or len(resume_text) < 10:
+        return jsonify({'success': False, 'error': 'Could not read text. Please upload a valid PDF or Word Doc.'}), 400
+
+    # 2. AI Prompt
+    prompt = f"""
+    Act as a Senior Recruiter. Review this resume text for a "{target_role}" role.
+    RESUME TEXT: {resume_text[:3500]} 
+    
+    Analyze for Quantifiable Impact, ATS Keywords, and Action Verbs.
+    Return strict JSON:
+    {{
+        "overall_score": (Integer 0-100),
+        "headline_feedback": "Critical sentence about quality.",
+        "critical_issues": ["Issue 1", "Issue 2", "Issue 3"],
+        "missing_keywords": ["Skill 1", "Skill 2"]
+    }}
+    """
+    
+    analysis = call_ollama_json(prompt)
+    
+    if not analysis:
+        analysis = {
+            "overall_score": 50, 
+            "headline_feedback": "Could not process AI analysis.", 
+            "critical_issues": ["Ensure file is readable"], 
+            "missing_keywords": []
+        }
+
+    return jsonify({'success': True, 'data': analysis})
+
+
+@app.route('/api/resume/suggest', methods=['POST'])
+def smart_suggest():
+    """Smart Suggestion Engine"""
+    data = request.get_json(silent=True) or {}
+    section = data.get('section', 'summary').lower()
+    current_input = data.get('input', '').strip()
+    
+    section_prompts = {
+        'education': "format details like 'Degree Name | Major | University | Year'. Include CGPA.",
+        'summary': "professional career summary focusing on experience and tech stack.",
+        'skills': "list of technical skills grouped by category.",
+        'experience': "bullet points using 'Action Verb + Task + Result' formula.",
+        'projects': "project descriptions highlighting Tech Stack and problem solved.",
+        'languages': "languages known with proficiency.",
+        'hobbies': "constructive hobbies."
+    }
+    context = section_prompts.get(section, "professional resume content.")
+
+    if not current_input or len(current_input) < 5:
+        prompt = f"""
+        User needs starting ideas for '{section}' section.
+        Goal: Provide 3 professional templates/examples.
+        Context: {context}
+        Return JSON: {{ "suggestions": ["Example 1...", "Example 2...", "Example 3..."] }}
+        """
+    else:
+        prompt = f"""
+        User is writing resume section: '{section}'. Input: "{current_input}"
+        Goal: Provide 3 high-impact continuations/completions.
+        Context: {context}
+        Return JSON: {{ "suggestions": ["Option 1...", "Option 2...", "Option 3..."] }}
+        """
+    
+    result = call_ollama_json(prompt)
+    suggestions = result.get('suggestions', []) if result else []
+    
+    if not suggestions and not current_input:
+        suggestions = ["Start typing to get specific suggestions..."]
+    
+    return jsonify({'success': True, 'suggestions': suggestions})
+
+
+@app.route('/api/resume/polish', methods=['POST'])
+def polish_bullet_point():
+    """Polishes a bullet point"""
+    data = request.get_json(silent=True) or {}
+    text = data.get('text', '')
+    
+    if not text:
+        return jsonify({'success': False, 'error': 'No text provided'})
+
+    prompt = f"""
+    Rewrite this resume bullet using 'XYZ Formula' (Accomplished X as measured by Y, by doing Z).
+    Input: "{text}"
+    Return JSON: {{ "polished_options": ["Option 1 (Stronger)", "Option 2 (Metric Focused)"] }}
+    """
+    
+    result = call_ollama_json(prompt)
+    if result and 'polished_options' in result:
+        return jsonify({'success': True, 'data': result})
+    else:
+        return jsonify({'success': False, 'message': 'Could not polish text'})
+
+
 # ============================================================
 # HEALTH CHECK ENDPOINT
 # ============================================================
@@ -1247,3 +1427,4 @@ if __name__ == '__main__':
     """)
 
     app.run(debug=True, host='0.0.0.0', port=5001)
+    #x

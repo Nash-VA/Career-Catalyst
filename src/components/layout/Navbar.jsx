@@ -198,11 +198,11 @@ const Navbar = ({ transparent = false }) => {
                         </div>
                       </Link>
 
-                      <Link to="/resume-upload" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                      <Link to="/resume-builder" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                         <FileText size={18} className="text-primary" />
                         <div>
-                          <p className="font-medium text-gray-900">Update Resume</p>
-                          <p className="text-xs text-gray-500">Modify your profile</p>
+                          <p className="font-medium text-gray-900">Resume</p>
+                          <p className="text-xs text-gray-500">Build Resume</p>
                         </div>
                       </Link>
 
