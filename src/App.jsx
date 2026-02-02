@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ResumeUpload from './pages/ResumeUpload';
+import ResumeBuilder from './pages/ResumeBuilder';
 import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import CareerRecommendation from './pages/CareerRecommendation';
@@ -20,9 +21,10 @@ const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 
+
 function App() {
   return (
-    <Router>
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <AuthProvider>
         <UserProvider>
           <Routes>
@@ -30,6 +32,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/resume-upload" element={<ProtectedRoute><ResumeUpload /></ProtectedRoute>} />
+            
+            {/* ✅ ADD THESE TWO LINES */}
+            <Route path="/resume-builder" element={<ProtectedRoute><ResumeBuilder /></ProtectedRoute>} />
+            
             <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/career" element={<ProtectedRoute><CareerRecommendation /></ProtectedRoute>} />
@@ -37,6 +43,8 @@ function App() {
             <Route path="/roadmap" element={<ProtectedRoute><LearningRoadmap /></ProtectedRoute>} />
             <Route path="/courses" element={<ProtectedRoute><CourseRecommendation /></ProtectedRoute>} />
             <Route path="/interview" element={<ProtectedRoute><InterviewPrep /></ProtectedRoute>} />
+            
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </UserProvider>
       </AuthProvider>

@@ -1,0 +1,37 @@
+[
+  {
+    "skills": ["JavaScript", "React", "Node.js", "HTML", "CSS"],
+    "interests": ["web development", "coding", "frontend"],
+    "field_of_study": "Computer Science",
+    "experience": "Fresher",
+    "career": "Full Stack Developer"
+  },
+  {
+    "skills": ["Python", "Machine Learning", "Data Analysis", "SQL"],
+    "interests": ["data", "analytics", "ai"],
+    "field_of_study": "Data Science",
+    "experience": "1-2 years",
+    "career": "Data Scientist"
+  },
+  {
+    "skills": ["Figma", "Adobe XD", "UI Design", "Prototyping"],
+    "interests": ["design", "creative", "user experience"],
+    "field_of_study": "Design",
+    "experience": "Fresher",
+    "career": "UX/UI Designer"
+  },
+  {
+    "skills": ["Docker", "Kubernetes", "AWS", "Linux"],
+    "interests": ["cloud", "automation", "infrastructure"],
+    "field_of_study": "Computer Science",
+    "experience": "2-3 years",
+    "career": "DevOps Engineer"
+  },
+  {
+    "skills": ["React Native", "Flutter", "Swift", "Kotlin"],
+    "interests": ["mobile", "apps", "development"],
+    "field_of_study": "Software Engineering",
+    "experience": "1-2 years",
+    "career": "Mobile App Developer"
+  }
+]

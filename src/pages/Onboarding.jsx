@@ -1,22 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Loader } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 import Button from '../components/common/Button';
 import Input from '../components/common/Input';
 import Card from '../components/common/Card';
+import axios from 'axios';
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
   const { userData, updateUserData } = useUser();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  // ✅ FIX: Use empty object if userData is null
+  const safeUserData = userData || {};
 
   const [formData, setFormData] = useState({
     education: '',
     fieldOfStudy: '',
-    experience: userData.experience || '',
+    experience: safeUserData.experience || '',
     currentRole: '',
-    skills: userData.parsedSkills?.join(', ') || '',
+    skills: safeUserData.parsedSkills?.join(', ') || '',
     interests: '',
     careerGoals: '',
     preferredIndustry: ''
@@ -26,6 +32,7 @@ const Onboarding = () => {
 
   const handleChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+    setError('');
   };
 
   const handleNext = () => {
@@ -40,18 +47,75 @@ const Onboarding = () => {
     }
   };
 
-  const handleSubmit = () => {
-    const skillsArray = formData.skills.split(',').map(s => s.trim());
-    const interestsArray = formData.interests.split(',').map(i => i.trim());
-    
-    updateUserData({
-      ...formData,
-      skills: skillsArray,
-      interests: interestsArray,
-      completedOnboarding: true
-    });
-    
-    navigate('/dashboard');
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      console.log('📤 Submitting onboarding...');
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Please login first');
+        navigate('/login');
+        return;
+      }
+
+      const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(s => s);
+      const interestsArray = formData.interests.split(',').map(i => i.trim()).filter(i => i);
+      
+      if (skillsArray.length === 0 || interestsArray.length === 0) {
+        setError('Please enter at least one skill and one interest');
+        setLoading(false);
+        return;
+      }
+
+      console.log('Skills:', skillsArray);
+      console.log('Interests:', interestsArray);
+      
+      // Save onboarding data
+      await axios.put(
+        'http://localhost:5000/api/user/update-onboarding',
+        {
+          onboardingData: {
+            skills: skillsArray,
+            interests: interestsArray,
+            experience: formData.experience,
+            careerGoals: formData.careerGoals,
+            fieldOfStudy: formData.fieldOfStudy,
+            preferredIndustries: formData.preferredIndustry ? [formData.preferredIndustry] : []
+          }
+        },
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+
+      console.log('✅ Onboarding data saved');
+
+      // Generate recommendation
+      const recResponse = await axios.post(
+        'http://localhost:5000/api/recommendation/generate',
+        {},
+        { headers: { 'Authorization': `Bearer ${token}` } }
+      );
+
+      if (recResponse.data.success) {
+        console.log('✅ Recommendation:', recResponse.data.recommendation?.title);
+        
+        updateUserData({
+          skills: skillsArray,
+          interests: interestsArray,
+          experience: formData.experience,
+          onboardingCompleted: true,
+          recommendedCareer: recResponse.data.recommendation
+        });
+
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      console.error('❌ Error:', err);
+      setError(err.response?.data?.message || 'Failed to complete onboarding');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const renderStep = () => {
@@ -156,7 +220,6 @@ const Onboarding = () => {
   return (
     <div className="min-h-screen flex items-center justify-center gradient-bg px-4 py-12">
       <Card className="w-full max-w-2xl animate-slide-up">
-        {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
             <span className="text-sm font-medium text-primary">Step {step} of {totalSteps}</span>
@@ -170,16 +233,20 @@ const Onboarding = () => {
           </div>
         </div>
 
-        {/* Form Content */}
+        {error && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+          </div>
+        )}
+
         <div className="min-h-[300px]">
           {renderStep()}
         </div>
 
-        {/* Navigation Buttons */}
         <div className="flex justify-between mt-8">
           <Button
             onClick={handleBack}
-            disabled={step === 1}
+            disabled={step === 1 || loading}
             variant="outline"
             className="flex items-center"
           >
@@ -190,6 +257,7 @@ const Onboarding = () => {
           {step < totalSteps ? (
             <Button
               onClick={handleNext}
+              disabled={loading}
               className="flex items-center"
             >
               Next
@@ -198,10 +266,20 @@ const Onboarding = () => {
           ) : (
             <Button
               onClick={handleSubmit}
-              className="flex items-center"
+              disabled={loading}
+              className="flex items-center min-w-[200px] justify-center"
             >
-              Analyze & Continue
-              <ChevronRight size={20} />
+              {loading ? (
+                <>
+                  <Loader className="animate-spin mr-2" size={20} />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  Analyze & Continue
+                  <ChevronRight size={20} />
+                </>
+              )}
             </Button>
           )}
         </div>
