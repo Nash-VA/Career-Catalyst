@@ -13,7 +13,7 @@ const SkillGapAnalysis = () => {
   const navigate = useNavigate();
   const career = userData.recommendedCareer;
   const [aiAnalysis, setAiAnalysis] = useState(null);
-  const [loading, setLoading] = useState(false); // FALSE by default!
+  const [loading, setLoading] = useState(false);
 
 
   useEffect(() => {
@@ -60,10 +60,13 @@ const SkillGapAnalysis = () => {
     );
   }
 
+  // ✅ UPDATED CALCULATION LOGIC (Synced with Dashboard)
   const hasSkills = career.currentSkills || [];
   const missingSkills = career.skillGap || [];
-  const totalSkills = career.requiredSkills?.length || 0;
-  const completionPercentage = totalSkills > 0 ? Math.round((hasSkills.length / totalSkills) * 100) : 0;
+  const totalSkillsCount = hasSkills.length + missingSkills.length;
+  const completionPercentage = totalSkillsCount > 0 
+    ? Math.round((hasSkills.length / totalSkillsCount) * 100) 
+    : 0;
 
   const getPriorityLevel = (index) => {
     if (index < 2) return { label: 'High', bgColor: 'bg-red-50', textColor: 'text-red-700', borderColor: 'border-red-300', badgeBg: 'bg-red-200' };
@@ -108,7 +111,7 @@ const SkillGapAnalysis = () => {
                 </p>
                 <div className="flex items-center gap-3 text-xs">
                   <div className="bg-primary/10 px-3 py-1.5 rounded-full">
-                    <span className="font-semibold text-primary">Completion: {aiAnalysis.completion_rate || completionPercentage}%</span>
+                    <span className="font-semibold text-primary">Completion: {completionPercentage}%</span>
                   </div>
                   <div className="bg-gray-100 px-3 py-1.5 rounded-full">
                     <span className="font-semibold text-gray-700">Skills to Learn: {missingSkills.length}</span>
@@ -124,7 +127,7 @@ const SkillGapAnalysis = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-bold text-dark mb-1">Overall Progress</h3>
-              <p className="text-sm text-gray-600">{hasSkills.length} of {totalSkills} skills acquired</p>
+              <p className="text-sm text-gray-600">{hasSkills.length} of {totalSkillsCount} skills acquired</p>
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold text-primary">{completionPercentage}%</div>

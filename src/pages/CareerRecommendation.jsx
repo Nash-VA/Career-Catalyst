@@ -1,25 +1,118 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Target, TrendingUp, CheckCircle2, Clock, Brain, ArrowRight, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Star, Clock, Award, Filter, Search, BookOpen, TrendingUp, ExternalLink, Users, Zap, DollarSign, X, CheckCircle, Sparkles } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 import Navbar from '../components/layout/Navbar';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
+import Loading from '../components/common/Loading';
 
-const CareerRecommendation = () => {
-  const { userData } = useUser();
-  const navigate = useNavigate();
-  const career = userData.recommendedCareer;
+const CourseRecommendation = () => {
+  // ✅ Extract contextLoading to prevent early "Empty State" render
+  const { userData, loading: contextLoading } = useUser();
+  const career = userData?.recommendedCareer;
+  
+  const [courses, setCourses] = useState([]);
+  const [filteredCourses, setFilteredCourses] = useState([]);
+  const [selectedLevel, setSelectedLevel] = useState('All');
+  const [selectedPrice, setSelectedPrice] = useState('All');
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSkill, setSelectedSkill] = useState('All');
+  const [aiInsights, setAiInsights] = useState(null);
+  const [insightsLoading, setInsightsLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
 
+  const convertToINR = (price) => {
+    if (typeof price === 'string' && price.includes('₹')) return price;
+    if (price === 'Free' || price === 0 || price === '0') return 'Free';
+    return `₹${price}`;
+  };
+
+  const generateCourseUrl = (platform, title) => {
+    const searchTerm = encodeURIComponent(title);
+    const platformUrls = {
+      'Udemy': `https://www.udemy.com/courses/search/?q=${searchTerm}`,
+      'Coursera': `https://www.coursera.org/search?query=${searchTerm}`,
+      'Pluralsight': `https://www.pluralsight.com/search?q=${searchTerm}`,
+      'LinkedIn Learning': `https://www.linkedin.com/learning/search?keywords=${searchTerm}`
+    };
+    return platformUrls[platform] || `https://www.google.com/search?q=${searchTerm}+online+course`;
+  };
+
+  useEffect(() => {
+    const fetchAICourses = async () => {
+      if (!career) return;
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:5001/api/course-recommendations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            skill_gaps: career.skillGap || [],
+            career_title: career.title,
+            required_skills: career.requiredSkills || []
+          })
+        });
+        const data = await response.json();
+        if (data.success && data.courses) {
+          const enhanced = data.courses.map((course, idx) => ({
+            ...course,
+            id: idx + 1,
+            price: convertToINR(course.price),
+            url: course.url || generateCourseUrl(course.platform, course.title),
+            skills: course.skills || [career.skillGap[0]],
+            level: course.level || 'Intermediate'
+          }));
+          setCourses(enhanced);
+          setFilteredCourses(enhanced);
+        }
+      } catch (error) {
+        console.error('Fetch failed', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (!contextLoading) fetchAICourses();
+  }, [career, contextLoading]);
+
+  const fetchAIInsights = async () => {
+    if (!career || insightsLoading) return;
+    try {
+      setInsightsLoading(true);
+      const response = await fetch('http://localhost:5001/api/course-insights', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          career_title: career.title,
+          skill_gaps: career.skillGap || [],
+          current_skills: career.currentSkills || []
+        })
+      });
+      const data = await response.json();
+      if (data.success) setAiInsights(data.insights);
+    } catch (error) {
+      setAiInsights('Insights currently unavailable.');
+    } finally {
+      setInsightsLoading(false);
+    }
+  };
+
+  // ✅ 1. Wait for User Profile loading first
+  if (contextLoading) {
+    return <Loading message="Syncing Profile..." submessage="Preparing your dashboard" />;
+  }
+
+  // ✅ 2. Now check if career data exists after profile load is done
   if (!career) {
     return (
       <div className="min-h-screen bg-light">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <AlertCircle className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-primary mb-2">No Career Recommendation Yet</h2>
-          <p className="text-gray-600 mb-6">Please complete your onboarding to get your personalized career recommendation</p>
-          <Button onClick={() => navigate('/dashboard')}>Go to Dashboard</Button>
+          <BookOpen className="w-16 h-16 text-primary mx-auto mb-4 opacity-30" />
+          <h2 className="text-2xl font-bold text-dark mb-2">No Recommendations Yet</h2>
+          <p className="text-gray-600 mb-6">Complete onboarding to unlock AI-curated courses.</p>
+          <Button onClick={() => window.location.href = '/onboarding'}>Start Onboarding</Button>
         </div>
       </div>
     );
@@ -28,179 +121,65 @@ const CareerRecommendation = () => {
   return (
     <div className="min-h-screen bg-light">
       <Navbar />
-      
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-8 animate-slide-up">
-          <h1 className="text-4xl font-bold text-primary mb-2">Your Career Recommendation</h1>
-          <p className="text-gray-600 text-lg">
-            AI-powered career path based on your profile analysis
-          </p>
-        </div>
-
-        {/* Main Career Card */}
-        <Card className="mb-8 animate-slide-up border-l-4 border-primary">
-          <div className="flex items-start justify-between mb-6">
-            <div className="flex items-start gap-4 flex-1">
-              <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center text-4xl">
-                {career.icon}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-primary mb-2">Course Recommendations</h1>
+          <Card className="border-2 border-blue-100 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-start justify-between">
+              <div>
+                <h3 className="font-bold text-dark">AI Learning Advisor</h3>
+                <p className="text-sm text-gray-600">Personalized path for {career.title}</p>
               </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-3">
-                  <h2 className="text-4xl font-bold text-primary">{career.title}</h2>
-                  <span className="px-4 py-1 bg-green-100 text-green-700 rounded-full text-sm font-semibold">
-                    Best Match
-                  </span>
-                </div>
-                <p className="text-gray-600 text-xl mb-4">{career.description}</p>
-                <div className="flex items-start gap-3 bg-blue-50 p-4 rounded-lg">
-                  <Brain className="w-6 h-6 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="font-semibold text-blue-900 mb-1">Why this career is perfect for you:</p>
-                    <p className="text-blue-800">{career.reason}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="text-right flex-shrink-0 ml-6">
-              <div className="text-6xl font-bold text-green-600 mb-2">
-                {career.matchScore}%
-              </div>
-              <p className="text-sm text-gray-500 font-medium">Match Score</p>
-              <div className="mt-4 w-32 h-32 relative">
-                <svg className="transform -rotate-90 w-32 h-32">
-                  <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
-                    stroke="currentColor"
-                    strokeWidth="8"
-                    fill="transparent"
-                    className="text-gray-200"
-                  />
-                  <circle
-                    cx="64"
-                    cy="64"
-                    r="56"
-                    stroke="currentColor"
-                    strokeWidth="8"
-                    fill="transparent"
-                    strokeDasharray={`${2 * Math.PI * 56}`}
-                    strokeDashoffset={`${2 * Math.PI * 56 * (1 - career.matchScore / 100)}`}
-                    className="text-green-600 transition-all duration-1000"
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Target className="w-10 h-10 text-green-600" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Skills Breakdown */}
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            <div className="bg-green-50 p-6 rounded-xl border border-green-200">
-              <h3 className="font-bold text-dark mb-4 flex items-center gap-2 text-lg">
-                <CheckCircle2 className="w-6 h-6 text-green-600" />
-                Skills You Have ({career.currentSkills?.length || 0})
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {career.currentSkills?.length > 0 ? (
-                  career.currentSkills.map((skill, idx) => (
-                    <span key={idx} className="px-4 py-2 bg-green-200 text-green-800 rounded-full text-sm font-semibold">
-                      ✓ {skill}
-                    </span>
-                  ))
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchAIInsights}
+                disabled={insightsLoading}
+                className="flex items-center gap-2 border-blue-200 text-blue-700 bg-white"
+              >
+                {/* ✅ Small Sparkles Loader for Button */}
+                {insightsLoading ? (
+                  <>
+                    <Sparkles className="w-4 h-4 text-blue-600 animate-spin" />
+                    <span>Analyzing...</span>
+                  </>
                 ) : (
-                  <span className="text-gray-500 text-sm">Start building your skills</span>
+                  <>
+                    <Zap className="w-4 h-4" />
+                    <span>{aiInsights ? 'Refresh' : 'Get Insights'}</span>
+                  </>
                 )}
-              </div>
+              </Button>
             </div>
-            
-            <div className="bg-orange-50 p-6 rounded-xl border border-orange-200">
-              <h3 className="font-bold text-dark mb-4 flex items-center gap-2 text-lg">
-                <Clock className="w-6 h-6 text-orange-600" />
-                Skills to Learn ({career.skillGap?.length || 0})
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {career.skillGap?.map((skill, idx) => (
-                  <span key={idx} className="px-4 py-2 bg-orange-200 text-orange-800 rounded-full text-sm font-semibold">
-                    → {skill}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* All Required Skills */}
-          <div className="bg-gray-50 p-6 rounded-xl mb-6">
-            <h3 className="font-bold text-dark mb-3 text-lg">All Required Skills for this Career:</h3>
-            <div className="flex flex-wrap gap-2">
-              {career.requiredSkills?.map((skill, idx) => (
-                <span 
-                  key={idx} 
-                  className={`px-3 py-2 rounded-lg text-sm font-medium ${
-                    career.currentSkills?.includes(skill)
-                      ? 'bg-green-100 text-green-700 border border-green-300'
-                      : 'bg-white text-gray-700 border border-gray-300'
-                  }`}
-                >
-                  {skill}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="grid md:grid-cols-3 gap-4">
-            <Button onClick={() => navigate('/skills')} className="w-full flex items-center justify-center gap-2">
-              View Skill Analysis
-              <ArrowRight size={18} />
-            </Button>
-            <Button onClick={() => navigate('/roadmap')} variant="outline" className="w-full flex items-center justify-center gap-2">
-              Get Learning Roadmap
-              <ArrowRight size={18} />
-            </Button>
-            <Button onClick={() => navigate('/courses')} variant="secondary" className="w-full flex items-center justify-center gap-2">
-              Find Courses
-              <ArrowRight size={18} />
-            </Button>
-          </div>
-        </Card>
-
-        {/* Quick Stats */}
-        <div className="grid md:grid-cols-3 gap-6">
-          <Card hover className="text-center">
-            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Target className="w-6 h-6 text-blue-600" />
-            </div>
-            <h3 className="font-bold text-dark mb-1">Career Ready</h3>
-            <p className="text-3xl font-bold text-primary mb-1">{career.matchScore}%</p>
-            <p className="text-gray-600 text-sm">Current readiness level</p>
-          </Card>
-
-          <Card hover className="text-center">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <CheckCircle2 className="w-6 h-6 text-green-600" />
-            </div>
-            <h3 className="font-bold text-dark mb-1">Skills Acquired</h3>
-            <p className="text-3xl font-bold text-green-600 mb-1">{career.currentSkills?.length || 0}</p>
-            <p className="text-gray-600 text-sm">Out of {career.requiredSkills?.length || 0} required</p>
-          </Card>
-
-          <Card hover className="text-center">
-            <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <TrendingUp className="w-6 h-6 text-orange-600" />
-            </div>
-            <h3 className="font-bold text-dark mb-1">To Learn</h3>
-            <p className="text-3xl font-bold text-orange-600 mb-1">{career.skillGap?.length || 0}</p>
-            <p className="text-gray-600 text-sm">Skills remaining</p>
+            {aiInsights && <p className="mt-4 text-sm text-gray-700 whitespace-pre-line">{aiInsights}</p>}
           </Card>
         </div>
+
+        {/* ✅ Main Custom Sparkles Loader for course fetching */}
+        {loading ? (
+          <div className="py-20">
+            <Loading 
+              message="Finding Best Courses..." 
+              submessage={`AI is scanning for ${career.title} resources`} 
+            />
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCourses.map((course) => (
+              <Card key={course.id} hover className="flex flex-col h-full">
+                <h3 className="font-bold text-dark line-clamp-2">{course.title}</h3>
+                <p className="text-primary text-sm font-semibold mb-4">{course.platform}</p>
+                <div className="mt-auto pt-4 flex justify-between items-center border-t">
+                  <span className="text-xl font-bold text-primary">{course.price}</span>
+                  <Button size="sm" onClick={() => window.open(course.url, '_blank')}>View</Button>
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default CareerRecommendation;
+export default CourseRecommendation;

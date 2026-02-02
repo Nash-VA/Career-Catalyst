@@ -24,33 +24,28 @@ import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Loading from '../components/common/Loading';
 
-
 const Dashboard = () => {
   const { userData, updateUserData } = useUser();
   const [recommendedCareer, setRecommendedCareer] = useState(null);
   const [loading, setLoading] = useState(true);
 
-
-useEffect(() => {
-  // CHECK IF DATA ALREADY EXISTS
-  if (userData.recommendedCareer) {
-    // Data exists - use it immediately (NO LOADING!)
-    setRecommendedCareer(userData.recommendedCareer);
-    setLoading(false);
-  } else {
-    // No data - analyze and generate (ONLY FIRST TIME)
-    const timer = setTimeout(() => {
-      const career = matchCareer(userData);
-      setRecommendedCareer(career);
-      updateUserData({ recommendedCareer: career });
+  useEffect(() => {
+    // CHECK IF DATA ALREADY EXISTS
+    if (userData.recommendedCareer) {
+      setRecommendedCareer(userData.recommendedCareer);
       setLoading(false);
-    }, 2500);
+    } else {
+      // No data - analyze and generate (ONLY FIRST TIME)
+      const timer = setTimeout(() => {
+        const career = matchCareer(userData);
+        setRecommendedCareer(career);
+        updateUserData({ recommendedCareer: career });
+        setLoading(false);
+      }, 2500);
 
-    return () => clearTimeout(timer);
-  }
-}, [userData.recommendedCareer]); // Add dependency
-
-
+      return () => clearTimeout(timer);
+    }
+  }, [userData.recommendedCareer, updateUserData, userData]);
 
   const quickActions = [
     { 
@@ -91,7 +86,6 @@ useEffect(() => {
     }
   ];
 
-
   if (loading) {
     return (
       <div className="min-h-screen bg-light">
@@ -115,17 +109,27 @@ useEffect(() => {
     );
   }
 
-
+  // ✅ IMPROVED LOGIC CALCULATIONS
+  // We sum acquired skills and gaps to get the TRUE total required.
   const skillsAcquired = recommendedCareer?.currentSkills?.length || 0;
-  const totalSkillsRequired = recommendedCareer?.requiredSkills?.length || 0;
   const skillsToLearn = recommendedCareer?.skillGap?.length || 0;
+  const totalSkillsRequired = skillsAcquired + skillsToLearn;
 
+  // Completion percentage now reflects reality (prevents the 100% bug)
+  const completionPercentage = totalSkillsRequired > 0 
+    ? Math.round((skillsAcquired / totalSkillsRequired) * 100) 
+    : 0;
+
+  // Calculation Logic: Readiness is a blend of natural fit (40%) and progress (60%)
+  const overallReadiness = Math.round(
+    ((recommendedCareer?.matchScore || 0) * 0.4) + (completionPercentage * 0.6)
+  );
 
   return (
     <div className="min-h-screen bg-light">
       <Navbar />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         {/* Header Section */}
         <div className="mb-8">
@@ -145,7 +149,6 @@ useEffect(() => {
           </div>
         </div>
 
-
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -158,7 +161,7 @@ useEffect(() => {
             <div className="text-3xl font-bold text-gray-900 mb-1">
               {recommendedCareer?.matchScore}%
             </div>
-            <p className="text-xs text-green-600 font-medium">Excellent fit</p>
+            <p className="text-xs text-green-600 font-medium">Potential fit</p>
           </div>
 
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -171,7 +174,7 @@ useEffect(() => {
             <div className="text-3xl font-bold text-gray-900 mb-1">
               {skillsAcquired}
             </div>
-            <p className="text-xs text-gray-500">of {totalSkillsRequired} required</p>
+            <p className="text-xs text-gray-500">of {totalSkillsRequired} total</p>
           </div>
 
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow">
@@ -189,23 +192,21 @@ useEffect(() => {
 
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium text-gray-600">Progress</span>
+              <span className="text-sm font-medium text-gray-600">Completion</span>
               <div className="w-8 h-8 bg-violet-50 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-violet-600" />
               </div>
             </div>
             <div className="text-3xl font-bold text-gray-900 mb-1">
-              {Math.round((skillsAcquired / totalSkillsRequired) * 100) || 0}%
+              {completionPercentage}%
             </div>
-            <p className="text-xs text-gray-500">completion rate</p>
+            <p className="text-xs text-gray-500">learning rate</p>
           </div>
         </div>
-
 
         {/* Main Career Recommendation Card */}
         {recommendedCareer && (
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-8 overflow-hidden">
-            {/* Header with gradient accent */}
             <div className="h-2 bg-gradient-to-r from-primary via-accent to-primary"></div>
             
             <div className="p-6 sm:p-8">
@@ -230,7 +231,6 @@ useEffect(() => {
                 </div>
               </div>
 
-
               {/* AI Insight Box */}
               <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-lg p-4 mb-6">
                 <div className="flex items-start gap-3">
@@ -248,10 +248,8 @@ useEffect(() => {
                 </div>
               </div>
 
-
               {/* Skills Grid */}
               <div className="grid md:grid-cols-2 gap-6 mb-6">
-                {/* Skills Acquired */}
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 bg-green-100 rounded-md flex items-center justify-center">
@@ -284,7 +282,6 @@ useEffect(() => {
                   </div>
                 </div>
                 
-                {/* Skills to Learn */}
                 <div>
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-6 h-6 bg-orange-100 rounded-md flex items-center justify-center">
@@ -310,8 +307,6 @@ useEffect(() => {
                 </div>
               </div>
 
-
-              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100">
                 <Link to="/skills" className="flex-1">
                   <button className="w-full px-4 py-3 bg-primary text-white rounded-lg font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
@@ -331,16 +326,12 @@ useEffect(() => {
           </div>
         )}
 
-
         {/* Quick Actions Section */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-gray-900">
               Recommended Actions
             </h2>
-            <span className="text-sm text-gray-500">
-              Start your journey
-            </span>
           </div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -366,7 +357,6 @@ useEffect(() => {
           </div>
         </div>
 
-
         {/* Progress Card */}
         <div className="bg-gradient-to-br from-primary to-accent rounded-xl p-6 sm:p-8 text-white shadow-lg">
           <div className="flex items-start justify-between mb-6">
@@ -384,14 +374,17 @@ useEffect(() => {
           <div className="space-y-4">
             <div className="flex justify-between text-sm mb-2">
               <span className="font-medium">Overall Readiness</span>
-              <span className="font-bold">{recommendedCareer?.matchScore}%</span>
+              {/* ✅ Uses the new calculated readiness variable */}
+              <span className="font-bold">{overallReadiness}%</span>
             </div>
             <div className="w-full bg-white/20 rounded-full h-3 overflow-hidden">
               <div 
                 className="bg-white h-3 rounded-full transition-all duration-1000 shadow-lg" 
-                style={{ width: `${recommendedCareer?.matchScore}%` }}
+                style={{ width: `${overallReadiness}%` }}
               ></div>
             </div>
+
+            
             
             <div className="grid grid-cols-3 gap-4 pt-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
@@ -400,7 +393,7 @@ useEffect(() => {
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
                 <p className="text-white/80 text-xs mb-1">Completion</p>
-                <p className="text-xl font-bold">{Math.round((skillsAcquired / totalSkillsRequired) * 100) || 0}%</p>
+                <p className="text-xl font-bold">{completionPercentage}%</p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-3">
                 <p className="text-white/80 text-xs mb-1">To Learn</p>
@@ -409,10 +402,9 @@ useEffect(() => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
-
 
 export default Dashboard;

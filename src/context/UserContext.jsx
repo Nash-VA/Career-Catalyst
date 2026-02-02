@@ -35,12 +35,10 @@ export const UserProvider = ({ children }) => {
           if (response.data.success) {
             const fetchedUser = response.data.user;
             console.log('✅ User loaded:', fetchedUser.email);
-            console.log('   Recommended Career:', fetchedUser.recommendedCareer?.title || 'Not set');
             
             setUser(fetchedUser);
             setUserData({
               interests: fetchedUser.interests || [],
-              skills: fetchedUser.skills || [],
               experience: fetchedUser.experience || '',
               onboardingCompleted: fetchedUser.onboardingCompleted || false,
               recommendedCareer: fetchedUser.recommendedCareer || null
@@ -59,18 +57,16 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const updateUserData = (newData) => {
-    console.log('📝 Updating user data:', newData);
     setUserData(prev => ({ ...prev, ...newData }));
   };
 
   const clearUserData = () => {
-    console.log('🗑️ Clearing user data');
     setUser(null);
     setUserData(null);
     localStorage.removeItem('token');
-    localStorage.removeItem('careerCatalystUserData');
   };
 
+  // Strictly kept your original UI check here
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -83,18 +79,10 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, userData, updateUserData, clearUserData }}>
+    <UserContext.Provider value={{ user, userData, updateUserData, clearUserData, loading }}>
       {children}
     </UserContext.Provider>
   );
 };
 
-export const useUser = () => {
-  const context = useContext(UserContext);
-  if (!context) {
-    throw new Error('useUser must be used within UserProvider');
-  }
-  return context;
-};
-
-export default UserContext;
+export const useUser = () => useContext(UserContext);
