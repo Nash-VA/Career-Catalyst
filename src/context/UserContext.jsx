@@ -13,7 +13,6 @@ export const UserProvider = ({ children }) => {
     baseURL: 'http://localhost:5000/api'
   });
 
-  // Add token to requests
   api.interceptors.request.use((config) => {
     const token = localStorage.getItem('token');
     if (token) {
@@ -22,42 +21,86 @@ export const UserProvider = ({ children }) => {
     return config;
   });
 
-  // ✅ Load user data from backend on mount
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const token = localStorage.getItem('token');
-        
-        if (token) {
-          console.log('🔄 Loading user from backend...');
-          const response = await api.get('/auth/me');
+  // ✅ NEW: Defined outside useEffect so it can be exported
+  const fetchUserData = async () => {
+    try {
+      // Don't set loading to true here if you want background refreshes
+      // But if you want a spinner during refresh, keep it:
+      // setLoading(true); 
+      
+      const token = localStorage.getItem('token');
+      if (token) {
+        const response = await api.get('/auth/me');
+        if (response.data.success) {
+          const fetchedUser = response.data.user;
+          setUser(fetchedUser);
           
-          if (response.data.success) {
-            const fetchedUser = response.data.user;
-            console.log('✅ User loaded:', fetchedUser.email);
-            
-            setUser(fetchedUser);
-            setUserData({
-              interests: fetchedUser.interests || [],
-              experience: fetchedUser.experience || '',
-              onboardingCompleted: fetchedUser.onboardingCompleted || false,
-              recommendedCareer: fetchedUser.recommendedCareer || null
-            });
-          }
+          setUserData({
+            ...fetchedUser, // Keep original structure
+            interests: fetchedUser.interests || [],
+            experience: fetchedUser.experience || '',
+            // Handle both flat and nested structure for safety
+            onboardingCompleted: fetchedUser.onboardingData?.completedOnboarding || fetchedUser.onboardingCompleted || false,
+            recommendedCareer: fetchedUser.recommendedCareer || null
+          });
         }
-      } catch (error) {
-        console.error('❌ Failed to load user:', error);
-        localStorage.removeItem('token');
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error('❌ Failed to load user:', error);
+      // Only remove token if it's an auth error (401), not a network error
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('token');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    loadUser();
+  useEffect(() => {
+    fetchUserData();
   }, []);
 
   const updateUserData = (newData) => {
     setUserData(prev => ({ ...prev, ...newData }));
+  };
+
+  // ✅ Global Skill Completion Function
+  const completeSkill = async (skillName) => {
+    try {
+      // 1. Call Backend using the configured 'api' instance
+      // Note: 'api' already has baseURL and Authorization header set
+      const res = await api.post('/user/update-career-progress', { 
+        skill: skillName 
+      });
+
+      // 2. Update Local State Immediately (Optimistic Update)
+      if (res.data.success) {
+        setUserData(prev => {
+          if (!prev || !prev.recommendedCareer) return prev;
+
+          // Add skill to currentSkills
+          const updatedSkills = [...(prev.recommendedCareer.currentSkills || [])];
+          if (!updatedSkills.includes(skillName)) {
+            updatedSkills.push(skillName);
+          }
+
+          // Remove from skillGap
+          const updatedGap = (prev.recommendedCareer.skillGap || []).filter(s => s !== skillName);
+
+          return {
+            ...prev,
+            recommendedCareer: {
+              ...prev.recommendedCareer,
+              currentSkills: updatedSkills,
+              skillGap: updatedGap
+            }
+          };
+        });
+      }
+    } catch (error) {
+      console.error("Failed to complete skill:", error);
+      throw error;
+    }
   };
 
   const clearUserData = () => {
@@ -66,7 +109,6 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
-  // Strictly kept your original UI check here
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -79,7 +121,15 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, userData, updateUserData, clearUserData, loading }}>
+    <UserContext.Provider value={{ 
+      user, 
+      userData, 
+      updateUserData, 
+      completeSkill, 
+      clearUserData, 
+      loading,
+      fetchUserData // ✅ Exposed so Onboarding can trigger a refresh
+    }}>
       {children}
     </UserContext.Provider>
   );

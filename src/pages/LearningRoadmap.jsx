@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Circle, Clock, AlertCircle, BookOpen, Target, Loader2, Sparkles, ArrowRight, Map } from 'lucide-react';
+import { CheckCircle, Circle, Clock, AlertCircle, BookOpen, Target, Loader2, Sparkles, ArrowRight, Map, Check } from 'lucide-react';
 import { useUser } from '../context/UserContext';
 import Navbar from '../components/layout/Navbar';
 import Card from '../components/common/Card';
@@ -8,9 +8,9 @@ import Button from '../components/common/Button';
 import Loading from '../components/common/Loading';
 
 const LearningRoadmap = () => {
-  const { userData } = useUser();
+  const { userData, completeSkill } = useUser();
   const navigate = useNavigate();
-  const career = userData.recommendedCareer;
+  const career = userData?.recommendedCareer;
   const [roadmap, setRoadmap] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,13 +21,12 @@ const LearningRoadmap = () => {
       try {
         setLoading(true);
 
-        // ✅ Check cache first (15 min expiry)
         const cacheKey = `roadmap_${career.title}_${JSON.stringify(career.currentSkills || [])}`;
         const cached = localStorage.getItem(cacheKey);
         const cacheTime = localStorage.getItem(`${cacheKey}_time`);
         
         const now = Date.now();
-        const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
+        const CACHE_DURATION = 15 * 60 * 1000; 
 
         if (cached && cacheTime && (now - parseInt(cacheTime)) < CACHE_DURATION) {
           console.log('✅ Using cached roadmap');
@@ -38,9 +37,8 @@ const LearningRoadmap = () => {
 
         console.log('🔄 Fetching fresh roadmap from AI...');
 
-        // ✅ Reduce timeout and add abort controller
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 30000); 
 
         const response = await fetch('http://localhost:5001/api/learning-roadmap', {
           method: 'POST',
@@ -50,7 +48,7 @@ const LearningRoadmap = () => {
           },
           body: JSON.stringify({
             career_title: career.title,
-            current_skills: (career.currentSkills || []).slice(0, 5), // ✅ Limit data sent
+            current_skills: (career.currentSkills || []).slice(0, 5), 
             skill_gaps: (career.skillGap || []).slice(0, 6),
             required_skills: (career.requiredSkills || []).slice(0, 6)
           }),
@@ -63,16 +61,12 @@ const LearningRoadmap = () => {
         
         if (data.success && data.roadmap) {
           console.log('✅ AI roadmap received');
-          
-          // ✅ Cache the result
           localStorage.setItem(cacheKey, JSON.stringify(data.roadmap));
           localStorage.setItem(`${cacheKey}_time`, now.toString());
-          
           setRoadmap(data.roadmap);
         } else {
           console.warn('⚠️ AI failed, using fallback');
-          const fallback = generateFallbackRoadmap();
-          setRoadmap(fallback);
+          setRoadmap(generateFallbackRoadmap());
         }
       } catch (error) {
         if (error.name === 'AbortError') {
@@ -89,6 +83,27 @@ const LearningRoadmap = () => {
     fetchAIRoadmap();
   }, [career]);
 
+  // Helper to check if a specific skill is already in currentSkills
+  const isSkillAcquired = (skillName) => {
+    if (!skillName || typeof skillName !== 'string') return false;
+    if (!career?.currentSkills || !Array.isArray(career.currentSkills)) return false;
+    
+    return career.currentSkills.some(s => 
+        s && typeof s === 'string' && s.toLowerCase() === skillName.toLowerCase()
+    );
+  };
+
+  const handleToggleSkill = async (skillName) => {
+    if (!skillName || isSkillAcquired(skillName)) return; 
+    
+    try {
+      await completeSkill(skillName);
+      // Context update triggers re-render automatically
+    } catch (err) {
+      console.error("Error updating skill:", err);
+    }
+  };
+
   const generateFallbackRoadmap = () => {
     const hasSkills = career.currentSkills || [];
     const missingSkills = career.skillGap || [];
@@ -101,59 +116,21 @@ const LearningRoadmap = () => {
           phase_number: 1,
           title: 'Foundation Skills',
           duration: '2-3 months',
-          status: hasSkills.length > 0 ? 'completed' : 'in-progress',
           skills: hasSkills.length > 0 ? hasSkills.slice(0, 3) : ['HTML', 'CSS', 'JavaScript'],
-          description: 'In these first few months, you\'ll get comfortable with the basic tools used every day. You\'ll set up your code editor, learn Git to save your work, and understand how things actually work under the hood.',
-          learning_objectives: [
-            'Understand core concepts and terminology',
-            'Set up development environment',
-            'Complete beginner-level projects'
-          ],
-          resources: ['Online tutorials', 'Documentation', 'Beginner courses']
+          description: 'In these first few months, you\'ll get comfortable with the basic tools used every day.',
+          learning_objectives: ['Understand core concepts', 'Set up development environment'],
+          resources: ['Online tutorials', 'Documentation']
         },
         {
           phase_number: 2,
           title: 'Core Technologies',
           duration: '3-4 months',
-          status: hasSkills.length >= 3 ? 'in-progress' : 'upcoming',
           skills: missingSkills.slice(0, 3),
-          description: 'Now things get interesting. You\'ll dive into the main frameworks and tools. This is where you start building actual working applications from scratch and see everything come together.',
-          learning_objectives: [
-            'Build intermediate-level projects',
-            'Understand best practices',
-            'Learn industry-standard tools'
-          ],
-          resources: ['Online courses', 'Project-based learning', 'Practice exercises']
+          description: 'Dive into the main frameworks and tools.',
+          learning_objectives: ['Build intermediate-level projects', 'Understand best practices'],
+          resources: ['Online courses', 'Project-based learning']
         },
-        {
-          phase_number: 3,
-          title: 'Advanced Concepts',
-          duration: '3-4 months',
-          status: 'upcoming',
-          skills: missingSkills.slice(3, 6).length > 0 ? missingSkills.slice(3, 6) : ['Advanced patterns', 'Performance optimization', 'System design'],
-          description: 'Time to level up. You\'ll tackle complex problems, learn advanced patterns, and optimize for performance. This is what separates good developers from great ones.',
-          learning_objectives: [
-            'Master complex problem-solving',
-            'Learn advanced design patterns',
-            'Optimize for performance and scalability'
-          ],
-          resources: ['Advanced courses', 'Technical blogs', 'Research papers']
-        },
-        {
-          phase_number: 4,
-          title: 'Professional Practice',
-          duration: '2-3 months',
-          status: 'upcoming',
-          skills: ['Portfolio Projects', 'Open Source', 'Networking'],
-          description: 'Final stretch! Build a killer portfolio, contribute to real projects, and network with professionals. This is where learning meets landing a job.',
-          learning_objectives: [
-            'Build a professional portfolio',
-            'Contribute to real projects',
-            'Network with industry professionals',
-            'Prepare for job interviews'
-          ],
-          resources: ['GitHub', 'LinkedIn', 'Hackathons', 'Meetups']
-        }
+        // ... additional phases ...
       ]
     };
   };
@@ -188,16 +165,26 @@ const LearningRoadmap = () => {
 
   if (!roadmap) return null;
 
-  const hasSkills = career.currentSkills || [];
-  const totalSkills = career.requiredSkills?.length || 0;
-  const completionPercentage = totalSkills > 0 ? Math.round((hasSkills.length / totalSkills) * 100) : 0;
+  // --- 🟢 UPDATED PROGRESS LOGIC ---
+  // 1. Get all unique skills from the roadmap phases
+  const allRoadmapSkills = roadmap.phases?.flatMap(phase => phase.skills || []) || [];
+  const uniqueRoadmapSkills = [...new Set(allRoadmapSkills)];
+
+  // 2. Count how many of THESE specific skills are acquired
+  const completedRoadmapSkillsCount = uniqueRoadmapSkills.filter(skill => isSkillAcquired(skill)).length;
+  const totalRoadmapSkillsCount = uniqueRoadmapSkills.length;
+
+  // 3. Calculate Percentage based strictly on roadmap skills
+  const completionPercentage = totalRoadmapSkillsCount > 0 
+    ? Math.round((completedRoadmapSkillsCount / totalRoadmapSkillsCount) * 100) 
+    : 0;
+  // --- END UPDATED LOGIC ---
 
   return (
     <div className="min-h-screen bg-light">
       <Navbar />
       
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Clean Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Map className="w-8 h-8 text-primary" />
@@ -208,7 +195,6 @@ const LearningRoadmap = () => {
           </p>
         </div>
 
-        {/* AI Overview - Compact */}
         {roadmap.overview && (
           <div className="bg-white rounded-lg shadow-sm border-l-4 border-l-primary p-5 mb-6">
             <div className="flex items-start gap-4">
@@ -227,8 +213,10 @@ const LearningRoadmap = () => {
                   <div className="bg-gray-100 px-3 py-1.5 rounded-full">
                     <span className="font-semibold text-gray-700">Phases: {roadmap.phases?.length || 4}</span>
                   </div>
-                  <div className="bg-green-100 px-3 py-1.5 rounded-full">
-                    <span className="font-semibold text-green-700">Progress: {completionPercentage}%</span>
+                  <div className={`px-3 py-1.5 rounded-full transition-colors duration-500 ${
+                    completionPercentage === 100 ? 'bg-green-100 text-green-700' : 'bg-green-50 text-green-600'
+                  }`}>
+                    <span className="font-semibold">Progress: {completionPercentage}%</span>
                   </div>
                 </div>
               </div>
@@ -236,21 +224,35 @@ const LearningRoadmap = () => {
           </div>
         )}
 
-        {/* Timeline - Cleaner Design */}
         <div className="relative">
-          {/* Timeline Line */}
           <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-300 hidden md:block"></div>
 
           <div className="space-y-6">
-            {roadmap.phases?.map((phase, index) => (
+            {roadmap.phases?.map((phase, index) => {
+                // --- 🟢 NEW PHASE STATUS LOGIC ---
+                const phaseSkills = phase.skills || [];
+                const phaseTotal = phaseSkills.length;
+                const phaseCompleted = phaseSkills.filter(s => isSkillAcquired(s)).length;
+
+                let phaseStatus = 'UPCOMING';
+                if (phaseTotal > 0 && phaseCompleted === phaseTotal) {
+                    phaseStatus = 'COMPLETED';
+                } else if (phaseCompleted > 0) {
+                    phaseStatus = 'IN PROGRESS';
+                }
+                
+                const isPhaseComplete = phaseStatus === 'COMPLETED';
+                const isInProgress = phaseStatus === 'IN PROGRESS';
+                // --- END LOGIC ---
+
+                return (
               <div key={index} className="relative md:pl-16">
-                {/* Timeline Icon - Smaller */}
                 <div className="absolute left-0 top-4 hidden md:block">
-                  {phase.status === 'completed' ? (
-                    <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center shadow-md">
+                  {isPhaseComplete ? (
+                    <div className="w-12 h-12 rounded-full bg-green-600 flex items-center justify-center shadow-md transition-all duration-300 transform scale-105">
                       <CheckCircle className="w-6 h-6 text-white" />
                     </div>
-                  ) : phase.status === 'in-progress' ? (
+                  ) : isInProgress ? (
                     <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center shadow-md animate-pulse">
                       <Clock className="w-6 h-6 text-white" />
                     </div>
@@ -261,21 +263,18 @@ const LearningRoadmap = () => {
                   )}
                 </div>
 
-                <Card className={`${phase.status === 'in-progress' ? 'border-2 border-blue-500 shadow-md' : ''}`}>
-                  {/* Header - Compact */}
+                <Card className={`${isInProgress ? 'border-2 border-blue-500 shadow-md' : ''}`}>
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-bold text-gray-400">PHASE {phase.phase_number}</span>
                         <h3 className="text-xl font-bold text-dark">{phase.title}</h3>
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          phase.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          phase.status === 'in-progress' ? 'bg-blue-100 text-blue-700' :
+                        <span className={`px-3 py-1 rounded-full text-xs font-semibold transition-colors duration-300 ${
+                          isPhaseComplete ? 'bg-green-100 text-green-700' :
+                          isInProgress ? 'bg-blue-100 text-blue-700' :
                           'bg-gray-100 text-gray-600'
                         }`}>
-                          {phase.status === 'completed' ? 'COMPLETED' :
-                           phase.status === 'in-progress' ? 'IN PROGRESS' :
-                           'UPCOMING'}
+                          {phaseStatus}
                         </span>
                       </div>
                       <p className="text-gray-600 text-sm mb-2">{phase.description}</p>
@@ -286,29 +285,35 @@ const LearningRoadmap = () => {
                     </div>
                   </div>
 
-                  {/* Skills - Compact */}
                   <div className="mb-4">
                     <p className="text-xs font-semibold text-gray-600 uppercase mb-2 flex items-center gap-1.5">
                       <Target size={14} />
-                      Key Skills
+                      Key Skills (Click to complete)
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {phase.skills?.map((skill, idx) => (
-                        <span 
-                          key={idx}
-                          className={`px-3 py-1.5 rounded-lg text-sm font-medium ${
-                            phase.status === 'completed' ? 'bg-green-50 text-green-700 border border-green-200' :
-                            phase.status === 'in-progress' ? 'bg-blue-50 text-blue-700 border border-blue-200' :
-                            'bg-gray-50 text-gray-600 border border-gray-200'
-                          }`}
-                        >
-                          {skill}
-                        </span>
-                      ))}
+                      {phase.skills?.map((skill, idx) => {
+                        if (!skill || typeof skill !== 'string') return null;
+                        
+                        const acquired = isSkillAcquired(skill);
+                        return (
+                          <button 
+                            key={idx}
+                            onClick={() => handleToggleSkill(skill)}
+                            disabled={acquired}
+                            className={`px-3 py-1.5 rounded-lg text-sm font-medium flex items-center gap-2 transition-all duration-200 ${
+                              acquired 
+                                ? 'bg-green-50 text-green-700 border border-green-200 cursor-default shadow-sm' 
+                                : 'bg-white text-gray-700 border border-gray-200 hover:border-primary hover:text-primary cursor-pointer active:scale-95'
+                            }`}
+                          >
+                            {acquired ? <CheckCircle size={14} /> : <Circle size={14} />}
+                            {skill}
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
 
-                  {/* Learning Objectives - Compact */}
                   {phase.learning_objectives && phase.learning_objectives.length > 0 && (
                     <div className="mb-4">
                       <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Learning Objectives</p>
@@ -323,7 +328,6 @@ const LearningRoadmap = () => {
                     </div>
                   )}
 
-                  {/* Resources - Compact */}
                   {phase.resources && phase.resources.length > 0 && (
                     <div className="bg-gray-50 rounded-lg p-3">
                       <p className="text-xs font-semibold text-gray-600 uppercase mb-2">Recommended Resources</p>
@@ -337,8 +341,7 @@ const LearningRoadmap = () => {
                     </div>
                   )}
 
-                  {/* Action Button for In-Progress Phase */}
-                  {phase.status === 'in-progress' && (
+                  {isInProgress && !isPhaseComplete && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
                       <Button 
                         onClick={() => navigate('/courses')} 
@@ -352,11 +355,10 @@ const LearningRoadmap = () => {
                   )}
                 </Card>
               </div>
-            ))}
+            )})}
           </div>
         </div>
 
-        {/* Action Cards - Cleaner */}
         <div className="grid md:grid-cols-2 gap-5 mt-8">
           <div 
             onClick={() => navigate('/courses')}

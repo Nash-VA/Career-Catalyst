@@ -1010,7 +1010,6 @@ def clear_interview_session():
 @app.route('/api/interview-feedback', methods=['POST'])
 @error_handler
 def generate_interview_feedback():
-    """Generate brutally honest interview feedback"""
     data = request.json
     question = data.get('question', '')
     answer = data.get('answer', '')
@@ -1018,112 +1017,59 @@ def generate_interview_feedback():
     user_name = data.get('user_name', 'candidate')
 
     if not question or not answer:
-        return jsonify({
-            'success': False,
-            'message': 'Question and answer are required'
-        }), 400
+        return jsonify({'success': False, 'message': 'Missing data'}), 400
 
-    # ✅ NO CACHING - Always generate fresh, unique feedback
+    # ✅ THE "REJECTOR" PROMPT
+    prompt = f"""You are a Senior HR Director. You are currently interviewing {user_name} for a {career_title} position.
+You have a very low tolerance for unprofessional behavior.
 
-    prompt = f"""You're a senior {career_title} interviewer giving HONEST feedback to {user_name} who just answered an interview question.
+**STRICT SCORING RULES:**
+1. **AUTOMATIC 0-1 SCORE:** If the answer contains cursing, profanity, insults, or total gibberish (e.g., "asdfgh" or "idk"). No exceptions.
+2. **SCORE 2-4:** If the answer is irrelevant, way too short, or sounds like a generic bot.
+3. **SCORE 8-10:** Only if the answer is professional, technical, and high-quality.
 
-**Question Asked:**
-{question}
+**TONE LOGIC:**
+- If the score is 0-2: Be extremely blunt and offended. Tell {user_name} they are unprofessional and blacklisted from the company.
+- If the score is 3-6: Be a tough, unimpressed interviewer.
+- If the score is 7-10: Show professional respect.
 
-**{user_name}'s Answer:**
-{answer}
+**Question:** {question}
+**{user_name}'s Answer:** {answer}
 
-**Your Task:**
-Give brutally honest, helpful feedback. Score 0-10 and be TOUGH:
-
-**Scoring Guide:**
-- 0-3: Terrible - vague, generic, or completely off-topic
-- 4-5: Poor - missing key points, too short, no examples
-- 6-7: Decent - hits basics but lacks depth or specifics
-- 8-9: Good - solid answer with specific examples
-- 10: Excellent - comprehensive, specific, demonstrates real expertise
-
-**Feedback Style:**
-- Be DIRECT and HONEST (like a mentor who wants them to improve)
-- If answer is vague → Call it out: "This sounds like you copied a textbook"
-- If no examples → Demand them: "Where's the real project example?"
-- If too short → "You gave me 2 sentences for a senior-level question"
-- If actually good → Acknowledge what worked specifically
-- Use {user_name}'s name
-- NO sugarcoating
-
-**Response Format (pure JSON):**
+**Response Format (JSON):**
 {{
-  "score": 6,
-  "strengths": ["One specific thing they did well"],
-  "improvements": ["Specific critique 1", "What sounds fake or generic"],
-  "detailed_feedback": "2-3 sentences of honest feedback to {user_name}. Be specific about what's missing. If it's good, say why. If it's bad, say exactly what's wrong.",
-  "suggestions": "Here's how {user_name} should answer this instead: [give a specific better answer example with real details]"
-}}
+  "score": (Integer 0-10),
+  "strengths": ["One specific thing or 'None'"],
+  "improvements": ["Why this answer failed or succeeded"],
+  "detailed_feedback": "Your personal HR reaction to {user_name}.",
+  "suggestions": "How they should have behaved or answered."
+}}"""
 
-Generate feedback now:"""
-
-    print(f"\n📝 GENERATING FEEDBACK | User: {user_name} | Question length: {len(question)} | Answer length: {len(answer)}")
-
-    # ✅ NO timeout cache, always fresh
-    response_text = call_ollama_api(prompt, temperature=0.88, num_predict=400, format_json=True, timeout=45)
+    # ✅ Lower temperature (0.3) makes the AI much more disciplined and less 'nice'
+    response_text = call_ollama_api(prompt, temperature=0.3, num_predict=400, format_json=True, timeout=45)
 
     if response_text:
         try:
             feedback_data = json.loads(response_text)
+            
+            # ✅ PYTHON-LEVEL OVERRIDE (The "Anti-Rubbish" Filter)
+            # Detect cursing or short nonsense manually to override AI mistakes
+            low_quality_triggers = ['fuck', 'shit', 'idiot', 'damn', 'idk', '...', '---']
+            is_rubbish = any(word in answer.lower() for word in low_quality_triggers) or len(answer) < 5
 
-            # Validate score is realistic
-            score = feedback_data.get('score', 5)
-            if score > 10:
-                feedback_data['score'] = 8
-            elif score < 0:
-                feedback_data['score'] = 3
+            if is_rubbish:
+                feedback_data['score'] = 0
+                feedback_data['detailed_feedback'] = f"Listen {user_name}, using profanity or gibberish in a professional interview is a career-killer. You're dismissed. Don't apply here again."
+                feedback_data['strengths'] = ["None"]
+                feedback_data['improvements'] = ["Unprofessional conduct", "Lack of respect"]
 
             print(f"✅ FEEDBACK GENERATED | Score: {feedback_data.get('score')}/10")
-
-            return jsonify({
-                'success': True,
-                'feedback': feedback_data
-            })
+            return jsonify({'success': True, 'feedback': feedback_data})
 
         except json.JSONDecodeError:
-            # Enhanced fallback
-            answer_length = len(answer.split())
-            has_example = any(word in answer.lower() for word in ['project', 'example', 'time when', 'experience', 'worked on'])
-
-            if answer_length < 20:
-                score = 4
-                detailed_feedback = f"{user_name}, your answer is way too short ({answer_length} words). For interview questions, aim for 150-200 words with specific examples. You need to demonstrate actual experience, not just give textbook definitions."
-                suggestions = f"Here's how to improve: Start with a specific project or situation, explain what you did step-by-step, mention the technologies you used, and end with the outcome. For example: 'In my recent project building an e-commerce site, I implemented JWT authentication because...' Give me details."
-            elif not has_example:
-                score = 5
-                detailed_feedback = f"{user_name}, you're giving me theory without real examples. I need to hear about actual projects you've worked on. Generic explanations don't prove you can do the job. Tell me about a REAL situation where you applied this."
-                suggestions = "Restructure your answer: 'In [specific project], I faced [specific challenge]. I chose [specific technology/approach] because [reason]. The implementation involved [key steps]. The result was [specific outcome].' Make it real and specific."
-            elif answer_length > 200:
-                score = 6
-                detailed_feedback = f"{user_name}, you're giving me too much information ({answer_length} words). In real interviews, you'll lose the interviewer's attention. Focus on the most important points and be more concise. Quality over quantity."
-                suggestions = "Cut your answer to 150-180 words. Keep the strongest example, remove redundant explanations, and get to the point faster. Interviewers appreciate concise, impactful answers."
-            else:
-                score = 7
-                detailed_feedback = f"{user_name}, this is a solid answer. You included specific examples and showed you understand the concept. To make it even stronger, add more technical details about HOW you implemented it and WHAT the specific outcomes were (metrics, performance improvements, etc.)."
-                suggestions = "Take this from good to great by adding: 1) Specific technologies/tools you used, 2) Quantifiable results (speed, efficiency, user impact), 3) One challenge you overcame. These details demonstrate real expertise."
-
-            return jsonify({
-                'success': True,
-                'feedback': {
-                    'score': score,
-                    'strengths': ['You attempted to answer the question'] if score >= 5 else ['Needs significant improvement'],
-                    'improvements': ['Add specific examples', 'Include technical details', 'Discuss outcomes'],
-                    'detailed_feedback': detailed_feedback,
-                    'suggestions': suggestions
-                }
-            })
-    else:
-        return jsonify({
-            'success': False,
-            'message': 'Unable to generate feedback'
-        }), 503
-
+            return jsonify({'success': False, 'message': 'JSON Error'}), 500
+    
+    return jsonify({'success': False, 'message': 'API Error'}), 503
 # ============================================================
 # RESUME SUGGESTIONS (ENTERPRISE-LEVEL)
 # ============================================================

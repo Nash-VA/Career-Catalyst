@@ -205,6 +205,13 @@ const Navbar = ({ transparent = false }) => {
                           <p className="text-xs text-gray-500">Build Resume</p>
                         </div>
                       </Link>
+                      {/* <Link to="/onboarding" onClick={() => setIsProfileOpen(false)} className="flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
+                        <FileText size={18} className="text-primary" />
+                        <div>
+                          <p className="font-medium text-gray-900">Onboarding</p>
+                          <p className="text-xs text-gray-500">Complete your profile</p>
+                        </div>
+                      </Link> */}
 
                       <button onClick={() => { alert('Settings feature coming soon!'); setIsProfileOpen(false); }} className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors">
                         <Settings size={18} className="text-primary" />

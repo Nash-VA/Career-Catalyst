@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 import numpy as np
 
 # Load career data
-with open('career_data.json', 'r') as f:
+with open('career_dataset.json', 'r') as f:
     data = json.load(f)
 
 # Prepare training data

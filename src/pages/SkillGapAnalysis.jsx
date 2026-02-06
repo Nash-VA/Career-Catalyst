@@ -1,20 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, XCircle, AlertCircle, ArrowRight, TrendingUp, Loader2, Sparkles, Target, BookOpen, Map } from 'lucide-react';
+import { 
+  CheckCircle, 
+  XCircle, 
+  AlertCircle, 
+  ArrowRight, 
+  TrendingUp, 
+  Loader2, 
+  Sparkles, 
+  Target, 
+  BookOpen, 
+  Map,
+  Brain // ✅ Added Brain icon
+} from 'lucide-react';
 import { useUser } from '../context/UserContext';
 import Navbar from '../components/layout/Navbar';
 import Card from '../components/common/Card';
 import Button from '../components/common/Button';
 import Loading from '../components/common/Loading';
-
+import QuizModal from '../components/common/QuizModal'; // ✅ Import the Quiz Modal
 
 const SkillGapAnalysis = () => {
   const { userData } = useUser();
   const navigate = useNavigate();
-  const career = userData.recommendedCareer;
+  const career = userData?.recommendedCareer;
   const [aiAnalysis, setAiAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  
+  // ✅ State to manage the active quiz
+  const [activeQuizSkill, setActiveQuizSkill] = useState(null);
 
   useEffect(() => {
     const fetchAIAnalysis = async () => {
@@ -60,12 +74,23 @@ const SkillGapAnalysis = () => {
     );
   }
 
-  // ✅ UPDATED CALCULATION LOGIC (Synced with Dashboard)
+  // ✅ HELPER: Normalize strings to ignore case/spacing issues
+  const normalize = (str) => str ? String(str).toLowerCase().trim() : '';
+
+  // ✅ Calculation Logic with Normalization
   const hasSkills = career.currentSkills || [];
-  const missingSkills = career.skillGap || [];
+  
+  // Filter out skills from the "Gap" list if they already exist in "Current Skills" (ignoring case)
+  const rawMissingSkills = career.skillGap || [];
+  const missingSkills = rawMissingSkills.filter(gapSkill => 
+    !hasSkills.some(ownedSkill => normalize(ownedSkill) === normalize(gapSkill))
+  );
+
   const totalSkillsCount = hasSkills.length + missingSkills.length;
+  
+  // Calculate completion based on the corrected list
   const completionPercentage = totalSkillsCount > 0 
-    ? Math.round((hasSkills.length / totalSkillsCount) * 100) 
+    ? Math.round((hasSkills.length / (hasSkills.length + missingSkills.length)) * 100) 
     : 0;
 
   const getPriorityLevel = (index) => {
@@ -79,7 +104,7 @@ const SkillGapAnalysis = () => {
       <Navbar />
       
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Clean Header */}
+        {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
             <Target className="w-8 h-8 text-primary" />
@@ -90,8 +115,8 @@ const SkillGapAnalysis = () => {
           </p>
         </div>
 
-        {/* AI Analysis - Compact Border Design */}
-       {loading ? (
+        {/* AI Analysis */}
+        {loading ? (
             <div className="mb-6">
               <Loading 
                 message="Analyzing Your Skills..." 
@@ -122,19 +147,18 @@ const SkillGapAnalysis = () => {
           </div>
         ) : null}
 
-        {/* Progress Card - Compact Horizontal Design */}
+        {/* Progress Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h3 className="text-lg font-bold text-dark mb-1">Overall Progress</h3>
-              <p className="text-sm text-gray-600">{hasSkills.length} of {totalSkillsCount} skills acquired</p>
+              <p className="text-sm text-gray-600">{hasSkills.length} of {hasSkills.length + missingSkills.length} skills acquired</p>
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold text-primary">{completionPercentage}%</div>
             </div>
           </div>
           
-          {/* Progress Bar */}
           <div className="w-full bg-gray-200 rounded-full h-3 mb-4">
             <div 
               className="bg-primary h-3 rounded-full transition-all duration-1000"
@@ -142,7 +166,6 @@ const SkillGapAnalysis = () => {
             ></div>
           </div>
 
-          {/* Milestones - Compact */}
           <div className="grid grid-cols-3 gap-4">
             <div className="text-center">
               <div className={`w-10 h-10 rounded-full mx-auto mb-1.5 flex items-center justify-center ${
@@ -171,7 +194,7 @@ const SkillGapAnalysis = () => {
           </div>
         </div>
 
-        {/* Skills Grid - Cleaner Design */}
+        {/* Skills Grid */}
         <div className="grid md:grid-cols-2 gap-5 mb-6">
           {/* Skills You Have */}
           <Card>
@@ -228,6 +251,16 @@ const SkillGapAnalysis = () => {
                         <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${priority.textColor.replace('text-', 'bg-')}`}></span>
                         <span className="text-dark font-medium">{skill}</span>
                       </div>
+                      
+                      {/* ✅ Verify Button (Opens Quiz) */}
+                      <button
+                        onClick={() => setActiveQuizSkill(skill)}
+                        className="px-2.5 py-1 bg-white border border-gray-200 text-gray-700 text-xs rounded-md hover:bg-primary hover:text-white hover:border-primary font-medium flex items-center gap-1 shadow-sm transition-colors"
+                      >
+                        <Brain className="w-3 h-3" />
+                        Verify
+                      </button>
+
                       <span className={`px-2 py-0.5 ${priority.badgeBg} ${priority.textColor} rounded-full text-xs font-semibold`}>
                         {priority.label}
                       </span>
@@ -245,12 +278,13 @@ const SkillGapAnalysis = () => {
           </Card>
         </div>
 
-        {/* All Required Skills - Compact */}
+        {/* All Required Skills */}
         <Card className="mb-6">
           <h3 className="text-base font-bold text-primary mb-3">All Required Skills for {career.title}</h3>
           <div className="flex flex-wrap gap-2">
             {career.requiredSkills?.map((skill, idx) => {
-              const hasSkill = hasSkills.includes(skill);
+              // ✅ Updated check using normalization
+              const hasSkill = hasSkills.some(s => normalize(s) === normalize(skill));
               return (
                 <div
                   key={idx}
@@ -268,7 +302,7 @@ const SkillGapAnalysis = () => {
           </div>
         </Card>
 
-        {/* Action Cards - Cleaner */}
+        {/* Action Cards */}
         <div className="grid md:grid-cols-2 gap-5">
           <div 
             onClick={() => navigate('/roadmap')}
@@ -307,6 +341,20 @@ const SkillGapAnalysis = () => {
           </div>
         </div>
       </div>
+
+      {/* ✅ Quiz Modal Rendering */}
+      {activeQuizSkill && (
+        <QuizModal 
+          skill={activeQuizSkill} 
+          onClose={() => setActiveQuizSkill(null)}
+          onSuccess={() => {
+            setActiveQuizSkill(null);
+            // Refresh logic - reloading the page to fetch updated user data from backend
+            window.location.reload(); 
+          }} 
+        />
+      )}
+
     </div>
   );
 };

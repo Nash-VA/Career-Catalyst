@@ -160,7 +160,7 @@ const Signup = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 onBlur={() => handleBlur('name')}
-                placeholder="John Doe"
+                placeholder="James Gomes"
                 className={`w-full pl-11 pr-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 ${
                   touched.name && errors.name
                     ? 'border-red-300 bg-red-50'

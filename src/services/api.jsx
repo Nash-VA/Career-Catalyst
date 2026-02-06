@@ -27,12 +27,16 @@ export const authAPI = {
   signup: (data) => api.post('/auth/signup', data),
   login: (data) => api.post('/auth/login', data),
   getCurrentUser: () => api.get('/auth/me')
-  
 };
 
 export const userAPI = {
   getProfile: () => api.get('/user/profile'),
-  updateOnboarding: (data) => api.post('/user/onboarding', data)
+  updateOnboarding: (data) => api.post('/user/onboarding', data),
+  getAllUsers: () => api.get('/user/all-users'),
+  
+  // ✅ NEW: Micro-Quiz Functions
+  generateQuiz: (skill) => api.post('/user/generate-quiz', { skill }),
+  verifySkill: (skill, score) => api.post('/user/verify-skill', { skill, score })
 };
 
 export const resumeAPI = {

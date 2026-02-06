@@ -9,7 +9,8 @@ import axios from 'axios';
 
 const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const { userData, updateUserData } = useUser();
+  // ✅ FIX 1: Get fetchUserData from context
+  const { userData, updateUserData, fetchUserData } = useUser();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -100,6 +101,7 @@ const Onboarding = () => {
       if (recResponse.data.success) {
         console.log('✅ Recommendation:', recResponse.data.recommendation?.title);
         
+        // Optimistically update local state (Optional, but keeps UI snappy)
         updateUserData({
           skills: skillsArray,
           interests: interestsArray,
@@ -107,6 +109,10 @@ const Onboarding = () => {
           onboardingCompleted: true,
           recommendedCareer: recResponse.data.recommendation
         });
+
+        // ✅ FIX 2: Force a full data refresh from the backend
+        // This ensures the Dashboard gets the latest career data guaranteed
+        await fetchUserData();
 
         navigate('/dashboard');
       }

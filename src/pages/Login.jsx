@@ -47,34 +47,37 @@ const Login = () => {
     setTouched({ ...touched, [field]: true });
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     setTouched({ email: true, password: true });
     
     const newErrors = validate();
+    
     if (Object.keys(newErrors).length === 0) {
       setIsLoading(true);
-      try {
-        await login(email, password);
-        
-        // Save remember me preference
-        if (rememberMe) {
-          localStorage.setItem('rememberedEmail', email);
-        } else {
-          localStorage.removeItem('rememberedEmail');
-        }
+      
+      // 1. Capture the result from the login attempt
+      const result = await login(email, password);
 
-        setTimeout(() => {
-          const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-          if (userData.completedOnboarding) {
-            navigate('/dashboard');
-          } else {
-            navigate('/resume-upload');
-          }
-        }, 500);
-      } catch (error) {
+      // 2. ONLY proceed if the backend login was successful
+      if (result.success) {
+        
+        // 3. NOW check if it's the admin
+        if (email === "admin@careercatalyst.com") {
+          console.log("👑 Admin Logged In with Valid Token");
+          localStorage.setItem('isAdmin', 'true');
+          navigate('/admin');
+          return;
+        } 
+        
+        // Normal user flow
+        localStorage.setItem('isAdmin', 'false');
+        navigate('/dashboard');
+
+      } else {
+        // Login failed (User doesn't exist or wrong password)
         setIsLoading(false);
-        setErrors({ submit: 'Invalid email or password. Please try again.' });
+        setErrors({ submit: result.message || 'Invalid email or password.' });
       }
     } else {
       setErrors(newErrors);
@@ -252,25 +255,6 @@ const Login = () => {
             <span className="px-4 bg-white text-gray-500 font-medium">OR</span>
           </div>
         </div>
-
-        {/* Demo Account Info */}
-        {/* <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-100 rounded-xl p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-blue-600" />
-            </div>
-            <div className="flex-1">
-              <h3 className="text-sm font-bold text-gray-900 mb-1">Try Demo Account</h3>
-              <p className="text-xs text-gray-600 mb-2">
-                Experience all features without signing up
-              </p>
-              <div className="space-y-1 text-xs font-mono bg-white/60 rounded-lg p-2">
-                <p className="text-gray-700"><span className="font-semibold">Email:</span> demo@career.com</p>
-                <p className="text-gray-700"><span className="font-semibold">Pass:</span> demo123</p>
-              </div>
-            </div>
-          </div>
-        </div> */}
 
         {/* Footer Links */}
         <div className="text-center space-y-4">

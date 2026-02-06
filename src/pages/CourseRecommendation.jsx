@@ -397,7 +397,7 @@ const CourseRecommendation = () => {
             <div className="flex items-start justify-between flex-wrap gap-4 mb-4">
               <div className="flex items-start gap-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Zap className="w-5 h-5 text-blue-600" />
+                  <Sparkles className="w-7 h-7 text-primary" />
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-dark mb-1">AI Learning Advisor</h3>
