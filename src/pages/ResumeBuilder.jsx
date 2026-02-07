@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { 
   FileText, Download, Bot, ChevronLeft, ChevronRight, 
-  Sparkles, User, Briefcase, GraduationCap, Code, Upload, Loader2, Wand2, Check, ArrowLeft 
+  Sparkles, User, Briefcase, GraduationCap, Code, Upload, Loader2, Wand2, Check, ArrowLeft, AlertCircle 
 } from 'lucide-react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -103,6 +103,8 @@ const ResumeBuilder = () => {
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
   const [loadingState, setLoadingState] = useState({ field: null, type: null });
+  // New state for error handling
+  const [uploadError, setUploadError] = useState(null); 
   const printRef = useRef(null);
 
   const [resume, setResume] = useState({
@@ -119,6 +121,25 @@ const ResumeBuilder = () => {
     const file = e.target.files[0];
     if (!file) return;
 
+    // --- VALIDATION START ---
+    const allowedTypes = [
+      'application/pdf', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+      'application/msword', // .doc
+      'text/plain' // .txt
+    ];
+
+    // Check mime type or extension
+    if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|docx|doc|txt)$/i)) {
+      setUploadError("Invalid input: add only in document format");
+      e.target.value = ''; // Reset the input
+      return;
+    }
+
+    // Clear error if valid
+    setUploadError(null);
+    // --- VALIDATION END ---
+
     setLoading(true);
     const formData = new FormData();
     formData.append('file', file);
@@ -133,6 +154,7 @@ const ResumeBuilder = () => {
       }
     } catch (err) {
       console.error("Analysis failed", err);
+      setUploadError("Analysis failed. Please try again.");
     } finally {
       setLoading(false);
       e.target.value = '';
@@ -228,7 +250,16 @@ const ResumeBuilder = () => {
           </button>
           
           <div className="flex items-center gap-4">
+             {/* ERROR MESSAGE DISPLAY */}
+             {uploadError && (
+                <div className="flex items-center gap-2 text-red-400 bg-red-500/10 px-3 py-2 rounded-lg border border-red-500/20 text-xs animate-in fade-in slide-in-from-right-5">
+                  <AlertCircle size={14} />
+                  {uploadError}
+                </div>
+              )}
+
              <div className="relative">
+                {/* Accept attribute updated for user guidance, JS validation handles actual logic */}
                 <input type="file" accept=".pdf,.txt,.docx" onChange={handleFileUpload} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"/>
                 <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition text-[10px] font-bold uppercase tracking-widest">
                   {loading ? <Loader2 size={14} className="animate-spin"/> : <Upload size={14} />}
@@ -265,10 +296,10 @@ const ResumeBuilder = () => {
                 )}
                 
                 {steps[step].field === 'details' && (
-                   <div className="space-y-6">
+                    <div className="space-y-6">
                       <TextAreaField label="Languages" fieldName="languages" value={resume.languages} onChange={(e) => updateField('languages', e.target.value)} placeholder="English, French..." onSuggest={fetchSuggestions} onPolish={handlePolish} loadingState={loadingState} />
                       <TextAreaField label="Hobbies" fieldName="hobbies" value={resume.hobbies} onChange={(e) => updateField('hobbies', e.target.value)} placeholder="Coding, Hiking..." onSuggest={fetchSuggestions} onPolish={handlePolish} loadingState={loadingState} />
-                   </div>
+                    </div>
                 )}
 
                 {step > 0 && steps[step].field !== 'preview' && steps[step].field !== 'details' && (
@@ -343,11 +374,11 @@ const ResumeBuilder = () => {
                   <div ref={printRef} className="origin-top transform scale-[0.45] w-[210mm] min-h-[297mm] bg-white text-[#333] p-[12mm] shadow-sm mx-auto">
                     <h1 style={{fontSize: '32px', fontWeight: '800', color: '#2563eb', textTransform: 'uppercase', marginBottom: '5px'}}>{resume.name || 'YOUR NAME'}</h1>
                     <div style={{fontSize: '10px', color: '#666', borderBottom: '1px solid #ddd', paddingBottom: '10px', marginBottom: '20px'}}>
-                       {[resume.location, resume.email, resume.phone, resume.linkedin].filter(Boolean).join(' | ')}
+                        {[resume.location, resume.email, resume.phone, resume.linkedin].filter(Boolean).join(' | ')}
                     </div>
 
                     <div style={{display: 'table', width: '100%', tableLayout: 'fixed'}}>
-                       <div style={{display: 'table-cell', width: '70%', paddingRight: '20px', borderRight: '1px solid #eee', verticalAlign: 'top'}}>
+                        <div style={{display: 'table-cell', width: '70%', paddingRight: '20px', borderRight: '1px solid #eee', verticalAlign: 'top'}}>
                           {['Summary', 'Skills', 'Experience', 'Projects', 'Training', 'Education'].map(sec => {
                             const content = resume[sec.toLowerCase()];
                             if (!content || content.trim() === '') return null;
@@ -358,8 +389,8 @@ const ResumeBuilder = () => {
                               </div>
                             )
                           })}
-                       </div>
-                       <div style={{display: 'table-cell', width: '30%', paddingLeft: '20px', verticalAlign: 'top'}}>
+                        </div>
+                        <div style={{display: 'table-cell', width: '30%', paddingLeft: '20px', verticalAlign: 'top'}}>
                           {['Languages', 'Hobbies'].map(sec => {
                             const content = resume[sec.toLowerCase()];
                             if (!content || content.trim() === '') return null;
@@ -370,7 +401,7 @@ const ResumeBuilder = () => {
                               </div>
                             )
                           })}
-                       </div>
+                        </div>
                     </div>
                   </div>
                </div>

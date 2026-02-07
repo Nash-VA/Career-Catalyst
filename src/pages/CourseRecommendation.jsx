@@ -501,7 +501,7 @@ const CourseRecommendation = () => {
 
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <DollarSign className="w-4 h-4 text-gray-600" />
+                <span className="w-4 h-4 text-gray-600">₹</span>
                 <span className="font-bold text-dark">Price Range</span>
               </div>
               <div className="flex flex-wrap gap-2">

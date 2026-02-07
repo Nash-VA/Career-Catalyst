@@ -39,6 +39,12 @@ export const userAPI = {
   verifySkill: (skill, score) => api.post('/user/verify-skill', { skill, score })
 };
 
+// ✅ ADDED: Admin API for AI Insights
+export const adminAPI = {
+  // ✅ FIX: Changed axiosInstance to api to match your variable name
+  getAIInsights: (stats) => api.post('/admin/ai-insights', stats),
+};
+
 export const resumeAPI = {
   upload: (formData) => api.post('/resume/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
