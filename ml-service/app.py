@@ -1,3 +1,5 @@
+import pickle
+import os
 from flask import Flask, request, jsonify, session
 from flask_cors import CORS
 import requests
@@ -10,6 +12,18 @@ from datetime import datetime, timedelta
 from functools import wraps
 import fitz  
 from docx import Document 
+
+try:
+    with open('career_model.pkl', 'rb') as f:
+        saved_data = pickle.load(f)
+        career_model = saved_data['model']
+        vectorizer = saved_data['vectorizer']
+        label_encoder = saved_data['label_encoder']
+        career_db = saved_data['career_database']
+    print("✅ Random Forest Model loaded successfully!")
+except Exception as e:
+    print(f"⚠️ Warning: Could not load career_model.pkl: {e}")
+    career_model = None
 
 app = Flask(__name__)
 app.secret_key = 'your-secret-key-change-in-production'  # Change this in production
@@ -139,8 +153,73 @@ def call_ollama_api(prompt, temperature=0.85, num_predict=250, format_json=False
         return None
 
 # ============================================================
+# MACHINE LEARNING CAREER PREDICTION (RANDOM FOREST)
+# ============================================================
+@app.route('/api/recommend-career', methods=['POST'])
+@error_handler
+def recommend_career():
+    """Predict career using the trained Random Forest model"""
+    
+    # Check if the model loaded properly on startup
+    if career_model is None:
+        return jsonify({
+            'success': False,
+            'message': 'Machine Learning model is not loaded. Node.js will use fallback.'
+        }), 503
+
+    data = request.json
+    
+    # 1. Safely extract data sent from Node.js (onboarding.js)
+    skills = data.get('skills', [])
+    interests = data.get('interests', [])
+    field_of_study = data.get('field_of_study', '')
+    experience = data.get('experience', '')
+    
+    # 2. Reconstruct the text EXACTLY how the model was trained in train_model.py
+    text_input = ' '.join(skills) + ' ' + \
+                 ' '.join(interests) + ' ' + \
+                 field_of_study + ' ' + \
+                 experience
+           
+    print(f"\n🧠 ML Analyzing Profile: {text_input[:50]}...")
+    
+    try:
+        # 3. Vectorize the text using the saved TF-IDF vectorizer
+        X_input = vectorizer.transform([text_input.lower()])
+        
+        # 4. Make the prediction using Random Forest
+        prediction_idx = career_model.predict(X_input)[0]
+        
+        # 5. Decode the numeric prediction back to the career string
+        career_title = label_encoder.inverse_transform([prediction_idx])[0]
+        
+        # 6. Fetch the rich data for this career from your saved database
+        recommended_career_data = career_db.get(career_title)
+        
+        if not recommended_career_data:
+            raise ValueError(f"Career '{career_title}' not found in database.")
+            
+        print(f"🎯 ML Prediction Success: {career_title}")
+        
+        # 7. Send it back to Node.js
+        return jsonify({
+            'success': True,
+            'recommendation': recommended_career_data
+        })
+        
+    except Exception as e:
+        print(f"❌ ML Prediction Error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': 'Failed to generate ML recommendation',
+            'error': str(e)
+        }), 500
+
+
+# ============================================================
 # ENHANCED SKILL GAP ANALYSIS (ENTERPRISE-LEVEL)
 # ============================================================
+
 @app.route('/api/skill-analysis', methods=['POST'])
 @error_handler
 def skill_analysis():
