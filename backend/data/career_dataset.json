@@ -2,291 +2,1673 @@
   "careers": [
     {
       "id": 1,
-      "title": "Full Stack Developer",
-      "category": "Software Development",
-      "required_skills": ["JavaScript", "React", "Node.js", "MongoDB", "HTML", "CSS", "REST APIs", "Git"],
-      "optional_skills": ["TypeScript", "Docker", "AWS", "Redis", "GraphQL", "Next.js"],
-      "skill_keywords": ["web", "frontend", "backend", "javascript", "react", "node", "database", "api", "coding", "programming", "developer", "fullstack"],
-      "interest_keywords": ["web development", "coding", "programming", "software", "technology", "apps", "websites", "building products"],
-      "education": ["Computer Science", "Information Technology", "Software Engineering", "Self-taught"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Build complete web applications from frontend to backend, handling databases, servers, and client-side development.",
-      "average_salary": "₹6,00,000 - ₹18,00,000",
-      "demand_level": "Very High",
-      "growth_rate": "22%",
+      "title": "Data Scientist",
+      "category": "Data Science & AI",
+      "required_skills": [
+        "Python",
+        "Data Analysis",
+        "Machine Learning",
+        "Data Mining",
+        "Statistics",
+        "Network Security"
+      ],
+      "optional_skills": [
+        "Linux",
+        "Financial Analysis",
+        "Excel",
+        "Econometrics",
+        "JavaScript",
+        "React"
+      ],
+      "skill_keywords": [
+        "python",
+        "data analysis",
+        "machine learning",
+        "data mining",
+        "statistics",
+        "network security",
+        "linux",
+        "financial analysis",
+        "excel",
+        "econometrics",
+        "javascript",
+        "react"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "technology",
+        "data science",
+        "communications",
+        "finance"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for data scientist tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 2,
-      "title": "Data Scientist",
-      "category": "Data Science & AI",
-      "required_skills": ["Python", "Machine Learning", "Statistics", "SQL", "Data Visualization", "Pandas"],
-      "optional_skills": ["Deep Learning", "TensorFlow", "PyTorch", "Big Data", "R", "NLP"],
-      "skill_keywords": ["python", "machine learning", "ai", "data", "statistics", "ml", "deep learning", "algorithms", "predictive modeling"],
-      "interest_keywords": ["machine learning", "ai", "data science", "artificial intelligence", "analytics", "ml", "solving complex problems"],
-      "education": ["Computer Science", "Statistics", "Mathematics", "Data Science"],
-      "experience_levels": ["2+ years", "3-5 years"],
-      "description": "Build predictive models and extract insights from complex datasets using advanced statistical and machine learning techniques.",
-      "average_salary": "₹10,00,000 - ₹25,00,000",
-      "demand_level": "Very High",
-      "growth_rate": "28%",
-      "match_threshold": 0.5
+      "title": "Software Engineer",
+      "category": "Software Development",
+      "required_skills": [
+        "Java",
+        "System Design",
+        "Cloud Computing",
+        "Research",
+        "Statistical Analysis",
+        "Python"
+      ],
+      "optional_skills": [],
+      "skill_keywords": [
+        "java",
+        "system design",
+        "cloud computing",
+        "research",
+        "statistical analysis",
+        "python"
+      ],
+      "interest_keywords": [
+        "software development",
+        "ai"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for software engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 3,
-      "title": "Cloud Architect",
-      "category": "Cloud Computing",
-      "required_skills": ["AWS", "Azure", "Google Cloud", "Cloud Architecture", "Networking", "Security"],
-      "optional_skills": ["Terraform", "Kubernetes", "Docker", "Cost Management", "Migration Strategies"],
-      "skill_keywords": ["cloud", "aws", "azure", "gcp", "architecture", "infrastructure", "serverless", "scalability"],
-      "interest_keywords": ["cloud computing", "system design", "infrastructure", "scalability", "architecting solutions"],
-      "education": ["Computer Science", "IT", "Engineering", "Cloud Certifications"],
-      "experience_levels": ["5+ years"],
-      "description": "Design and manage an organization's cloud computing strategy, including cloud adoption plans, cloud application design, and cloud management and monitoring.",
-      "average_salary": "₹15,00,000 - ₹35,00,000",
-      "demand_level": "Extremely High",
-      "growth_rate": "25%",
-      "match_threshold": 0.55
+      "title": "UX Designer",
+      "category": "Design",
+      "required_skills": [
+        "Python",
+        "Graphic Design",
+        "UI/UX",
+        "Adobe Creative Suite",
+        "Machine Learning",
+        "Big Data"
+      ],
+      "optional_skills": [
+        "Deep Learning",
+        "Statistics",
+        "User Research",
+        "UX Design",
+        "Prototyping",
+        "UX/UI"
+      ],
+      "skill_keywords": [
+        "python",
+        "graphic design",
+        "ui/ux",
+        "adobe creative suite",
+        "machine learning",
+        "big data",
+        "deep learning",
+        "statistics",
+        "user research",
+        "ux design",
+        "prototyping",
+        "ux/ui"
+      ],
+      "interest_keywords": [
+        "technology",
+        "design",
+        "arts",
+        "digital media",
+        "web development"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for ux designer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 4,
-      "title": "DevOps Engineer",
-      "category": "Software Development",
-      "required_skills": ["Docker", "Kubernetes", "CI/CD", "Linux", "AWS/Azure", "Git", "Scripting (Bash/Python)"],
-      "optional_skills": ["Terraform", "Ansible", "Prometheus", "Grafana", "Jenkins"],
-      "skill_keywords": ["devops", "docker", "kubernetes", "aws", "cloud", "cicd", "automation", "linux", "infrastructure as code"],
-      "interest_keywords": ["devops", "cloud", "automation", "infrastructure", "deployment", "efficiency"],
-      "education": ["Computer Science", "IT", "Software Engineering"],
-      "experience_levels": ["2+ years", "3-5 years"],
-      "description": "Automate and streamline software development and deployment processes using cloud and containerization technologies to enable faster release cycles.",
-      "average_salary": "₹8,00,000 - ₹20,00,000",
-      "demand_level": "Very High",
-      "growth_rate": "24%",
-      "match_threshold": 0.45
+      "title": "AI Researcher",
+      "category": "Data Science & AI",
+      "required_skills": [
+        "Python",
+        "Deep Learning",
+        "Statistics",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "optional_skills": [
+        "Java",
+        "Algorithms",
+        "Data Structures"
+      ],
+      "skill_keywords": [
+        "python",
+        "deep learning",
+        "statistics",
+        "html",
+        "css",
+        "javascript",
+        "java",
+        "algorithms",
+        "data structures"
+      ],
+      "interest_keywords": [
+        "healthcare",
+        "ai"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for ai researcher tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 5,
-      "title": "AI/Machine Learning Engineer",
-      "category": "Data Science & AI",
-      "required_skills": ["Python", "TensorFlow", "PyTorch", "Machine Learning Algorithms", "Deep Learning", "NLP"],
-      "optional_skills": ["Computer Vision", "Reinforcement Learning", "MLOps", "Generative AI", "LLMs"],
-      "skill_keywords": ["ai", "machine learning", "deep learning", "nlp", "neural networks", "algorithms", "modeling", "generative ai"],
-      "interest_keywords": ["artificial intelligence", "robotics", "automation", "cognitive science", "future tech"],
-      "education": ["Computer Science", "Mathematics", "Statistics", "AI Specialization"],
-      "experience_levels": ["2+ years", "Master's/PhD often preferred"],
-      "description": "Design and implement machine learning models and artificial intelligence systems to solve complex problems and automate tasks.",
-      "average_salary": "₹12,00,000 - ₹30,00,000",
-      "demand_level": "Extremely High",
-      "growth_rate": "35%",
-      "match_threshold": 0.5
+      "title": "Project Manager",
+      "category": "Product Management",
+      "required_skills": [
+        "Project Management",
+        "Communication",
+        "Agile",
+        "Risk Analysis",
+        "Negotiation",
+        "C++"
+      ],
+      "optional_skills": [
+        "Embedded Systems",
+        "IoT",
+        "Data Visualization",
+        "Python",
+        "R",
+        "UX Research"
+      ],
+      "skill_keywords": [
+        "project management",
+        "communication",
+        "agile",
+        "risk analysis",
+        "negotiation",
+        "c++",
+        "embedded systems",
+        "iot",
+        "data visualization",
+        "python",
+        "r",
+        "ux research"
+      ],
+      "interest_keywords": [
+        "academia",
+        "management",
+        "business",
+        "research"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for project manager tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 6,
-      "title": "Cybersecurity Analyst",
-      "category": "Security",
-      "required_skills": ["Network Security", "Ethical Hacking", "Security Auditing", "Firewalls", "Incident Response", "Linux"],
-      "optional_skills": ["Penetration Testing", "SIEM Tools", "Cryptography", "Compliance Standards (ISO/NIST)", "Cloud Security"],
-      "skill_keywords": ["security", "cybersecurity", "hacking", "network", "ethical hacking", "firewall", "pentesting", "infosec"],
-      "interest_keywords": ["cybersecurity", "hacking", "ethical hacking", "protection", "investigation", "digital forensics"],
-      "education": ["Computer Science", "IT", "Cybersecurity", "Certifications (CEH, CISSP)"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Protect organizations from cyber threats by monitoring systems, conducting security audits, investigating breaches, and implementing security measures.",
-      "average_salary": "₹7,00,000 - ₹18,00,000",
-      "demand_level": "Very High",
-      "growth_rate": "28%",
-      "match_threshold": 0.45
+      "title": "Embedded Systems Engineer",
+      "category": "Emerging Tech",
+      "required_skills": [
+        "C++",
+        "Embedded Systems",
+        "IoT",
+        "SQL",
+        "Data Warehousing",
+        "ETL"
+      ],
+      "optional_skills": [
+        "Copywriting",
+        "SEO",
+        "Social Media"
+      ],
+      "skill_keywords": [
+        "c++",
+        "embedded systems",
+        "iot",
+        "sql",
+        "data warehousing",
+        "etl",
+        "copywriting",
+        "seo",
+        "social media"
+      ],
+      "interest_keywords": [
+        "analytics",
+        "electronics",
+        "automation",
+        "finance"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for embedded systems engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 7,
-      "title": "Blockchain Developer",
-      "category": "Emerging Tech",
-      "required_skills": ["Solidity", "Smart Contracts", "Cryptography", "Ethereum", "Blockchain Architecture"],
-      "optional_skills": ["Rust", "Web3.js", "Hyperledger", "DeFi Protocols", "NFT Standards"],
-      "skill_keywords": ["blockchain", "crypto", "smart contracts", "solidity", "ethereum", "web3", "decentralized", "ledger"],
-      "interest_keywords": ["blockchain", "cryptocurrency", "web3", "decentralization", "finance", "security"],
-      "education": ["Computer Science", "Cryptography", "Mathematics"],
-      "experience_levels": ["1-3 years", "3+ years"],
-      "description": "Develop decentralized applications (dApps) and smart contracts on blockchain platforms like Ethereum or Solana.",
-      "average_salary": "₹10,00,000 - ₹28,00,000",
+      "title": "Data Analyst",
+      "category": "Data Science & AI",
+      "required_skills": [
+        "Python",
+        "SQL",
+        "Data Analysis",
+        "JavaScript",
+        "Data Warehousing",
+        "ETL"
+      ],
+      "optional_skills": [
+        "Data Visualization",
+        "Excel",
+        "R",
+        "React",
+        "Node.js",
+        "Network Security"
+      ],
+      "skill_keywords": [
+        "python",
+        "sql",
+        "data analysis",
+        "javascript",
+        "data warehousing",
+        "etl",
+        "data visualization",
+        "excel",
+        "r",
+        "react",
+        "node.js",
+        "network security"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "finance",
+        "ai",
+        "healthcare",
+        "technology",
+        "analytics",
+        "cybersecurity",
+        "data science",
+        "statistics",
+        "data analytics",
+        "communications",
+        "business",
+        "data analysis"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for data analyst tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "30%",
-      "match_threshold": 0.5
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 8,
-      "title": "Mobile App Developer",
-      "category": "Software Development",
-      "required_skills": ["React Native", "Flutter", "Mobile UI", "API Integration", "State Management"],
-      "optional_skills": ["Swift (iOS)", "Kotlin (Android)", "Firebase", "App Store Optimization", "CI/CD for Mobile"],
-      "skill_keywords": ["mobile", "app", "react native", "flutter", "android", "ios", "development", "cross-platform"],
-      "interest_keywords": ["mobile development", "apps", "mobile apps", "android", "ios", "smartphones"],
-      "education": ["Computer Science", "Software Engineering", "Self-taught"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Create innovative mobile applications for Android and iOS platforms using cross-platform frameworks or native languages.",
-      "average_salary": "₹6,00,000 - ₹16,00,000",
+      "title": "Digital Marketer",
+      "category": "Marketing",
+      "required_skills": [
+        "SEO",
+        "Digital Marketing",
+        "Content Creation",
+        "Social Media",
+        "Analytics",
+        "Content Writing"
+      ],
+      "optional_skills": [
+        "Content Strategy",
+        "Copywriting",
+        "Java",
+        "System Design",
+        "Cloud Computing",
+        "C#"
+      ],
+      "skill_keywords": [
+        "seo",
+        "digital marketing",
+        "content creation",
+        "social media",
+        "analytics",
+        "content writing",
+        "content strategy",
+        "copywriting",
+        "java",
+        "system design",
+        "cloud computing",
+        "c#"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "finance",
+        "ai",
+        "technology",
+        "cybersecurity",
+        "analytics",
+        "software development",
+        "communications",
+        "business",
+        "social media"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for digital marketer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "19%",
+      "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 9,
-      "title": "UI/UX Designer",
-      "category": "Design",
-      "required_skills": ["Figma", "Adobe XD", "User Research", "Wireframing", "Prototyping", "User Centered Design"],
-      "optional_skills": ["Sketch", "Adobe Photoshop", "Interaction Design", "Design Systems", "HTML/CSS Basics"],
-      "skill_keywords": ["design", "ui", "ux", "figma", "adobe", "wireframe", "prototype", "user experience", "visual", "creative", "interface"],
-      "interest_keywords": ["design", "ui/ux", "creative", "art", "visual", "user experience", "interfaces", "psychology"],
-      "education": ["Design", "Fine Arts", "Computer Science", "Self-taught"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Create intuitive and visually appealing user interfaces and experiences for digital products, ensuring usability and accessibility.",
-      "average_salary": "₹5,00,000 - ₹14,00,000",
+      "title": "NLP Engineer",
+      "category": "Software Development",
+      "required_skills": [
+        "Python",
+        "Natural Language Processing",
+        "Machine Learning",
+        "NLP",
+        "Deep Learning",
+        "Project Management"
+      ],
+      "optional_skills": [
+        "Agile",
+        "Communication",
+        "Data Visualization",
+        "R"
+      ],
+      "skill_keywords": [
+        "python",
+        "natural language processing",
+        "machine learning",
+        "nlp",
+        "deep learning",
+        "project management",
+        "agile",
+        "communication",
+        "data visualization",
+        "r"
+      ],
+      "interest_keywords": [
+        "academia",
+        "research",
+        "technology",
+        "linguistics",
+        "ai",
+        "language"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for nlp engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "18%",
-      "match_threshold": 0.45
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 10,
-      "title": "Product Manager (Tech)",
-      "category": "Product Management",
-      "required_skills": ["Product Strategy", "User Research", "Roadmap Planning", "Agile/Scrum", "Data Analysis"],
-      "optional_skills": ["Technical Background", "A/B Testing", "UX Design Basics", "Market Research", "SQL"],
-      "skill_keywords": ["product", "management", "strategy", "agile", "roadmap", "features", "user research", "leadership"],
-      "interest_keywords": ["product management", "strategy", "business", "leadership", "innovation", "startups"],
-      "education": ["Business", "MBA", "Engineering", "Computer Science"],
-      "experience_levels": ["2-5 years", "5+ years"],
-      "description": "Define product vision, strategy, and roadmap while working with cross-functional teams (engineering, design, marketing) to deliver successful tech products.",
-      "average_salary": "₹12,00,000 - ₹30,00,000",
+      "title": "Financial Analyst",
+      "category": "Business",
+      "required_skills": [
+        "Python",
+        "Financial Analysis",
+        "Excel",
+        "Econometrics",
+        "Data Analysis",
+        "R"
+      ],
+      "optional_skills": [
+        "Deep Learning",
+        "Statistics",
+        "Graphic Design",
+        "UI/UX",
+        "Adobe Creative Suite",
+        "Machine Learning"
+      ],
+      "skill_keywords": [
+        "python",
+        "financial analysis",
+        "excel",
+        "econometrics",
+        "data analysis",
+        "r",
+        "deep learning",
+        "statistics",
+        "graphic design",
+        "ui/ux",
+        "adobe creative suite",
+        "machine learning"
+      ],
+      "interest_keywords": [
+        "design",
+        "data science",
+        "arts",
+        "digital media",
+        "web development",
+        "finance",
+        "data analysis"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for financial analyst tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "16%",
-      "match_threshold": 0.5
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 11,
-      "title": "Backend Developer",
-      "category": "Software Development",
-      "required_skills": ["Node.js", "Python (Django/Flask)", "Java (Spring Boot)", "REST/GraphQL APIs", "SQL/NoSQL Databases"],
-      "optional_skills": ["Microservices", "Redis", "Message Queues (Kafka/RabbitMQ)", "Docker", "System Design"],
-      "skill_keywords": ["backend", "server", "api", "database", "node", "python", "java", "microservices", "architecture"],
-      "interest_keywords": ["backend development", "servers", "apis", "databases", "system architecture", "scalability"],
-      "education": ["Computer Science", "IT", "Software Engineering"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Design and build server-side logic, databases, and APIs that power web and mobile applications, ensuring performance and scalability.",
-      "average_salary": "₹6,00,000 - ₹16,00,000",
-      "demand_level": "Very High",
-      "growth_rate": "21%",
+      "title": "Research Scientist",
+      "category": "Emerging Tech",
+      "required_skills": [
+        "Research",
+        "Statistical Analysis",
+        "Python",
+        "R",
+        "Financial Analysis",
+        "Excel"
+      ],
+      "optional_skills": [
+        "Econometrics",
+        "Data Analysis",
+        "Machine Learning"
+      ],
+      "skill_keywords": [
+        "research",
+        "statistical analysis",
+        "python",
+        "r",
+        "financial analysis",
+        "excel",
+        "econometrics",
+        "data analysis",
+        "machine learning"
+      ],
+      "interest_keywords": [
+        "data science",
+        "technology",
+        "academia",
+        "biotech"
+      ],
+      "education": [
+        "PhD",
+        "Bachelor's",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for research scientist tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 12,
-      "title": "Frontend Developer",
+      "title": "Front-end Developer",
       "category": "Software Development",
-      "required_skills": ["HTML", "CSS", "JavaScript", "React", "Responsive Design", "Version Control (Git)"],
-      "optional_skills": ["TypeScript", "Next.js", "Vue.js", "Tailwind CSS", "Web Performance Optimization"],
-      "skill_keywords": ["frontend", "web", "ui", "javascript", "react", "css", "html", "design implementation"],
-      "interest_keywords": ["frontend development", "web design", "user interface", "interactive web", "creative coding"],
-      "education": ["Computer Science", "IT", "Self-taught"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Implement visual elements that users see and interact with in a web application, ensuring a seamless user experience.",
-      "average_salary": "₹5,00,000 - ₹14,00,000",
+      "required_skills": [
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "UX",
+        "Research",
+        "Statistical Analysis"
+      ],
+      "optional_skills": [
+        "Python",
+        "Java",
+        "System Design",
+        "Cloud Computing"
+      ],
+      "skill_keywords": [
+        "html",
+        "css",
+        "javascript",
+        "ux",
+        "research",
+        "statistical analysis",
+        "python",
+        "java",
+        "system design",
+        "cloud computing"
+      ],
+      "interest_keywords": [
+        "technology",
+        "design",
+        "software development",
+        "web design",
+        "web development",
+        "ai"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for front-end developer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
       "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 13,
-      "title": "Site Reliability Engineer (SRE)",
+      "title": "Software Developer",
       "category": "Software Development",
-      "required_skills": ["Linux", "Python/Go", "Cloud Platforms", "Monitoring Tools", "Incident Management"],
-      "optional_skills": ["Chaos Engineering", "Database Administration", "Networking", "Kubernetes"],
-      "skill_keywords": ["sre", "reliability", "infrastructure", "automation", "monitoring", "scalability", "linux"],
-      "interest_keywords": ["reliability", "infrastructure", "system stability", "automation", "operations"],
-      "education": ["Computer Science", "Engineering"],
-      "experience_levels": ["2+ years", "3-5 years"],
-      "description": "Ensure that software systems are reliable, scalable, and efficient by applying software engineering principles to operations.",
-      "average_salary": "₹10,00,000 - ₹25,00,000",
+      "required_skills": [
+        "C#",
+        ".NET",
+        "Software Design",
+        "Java",
+        "Algorithms",
+        "Data Structures"
+      ],
+      "optional_skills": [
+        "Cloud Computing",
+        "DevOps",
+        "Python",
+        "Graphic Design",
+        "UI/UX",
+        "Adobe Creative Suite"
+      ],
+      "skill_keywords": [
+        "c#",
+        ".net",
+        "software design",
+        "java",
+        "algorithms",
+        "data structures",
+        "cloud computing",
+        "devops",
+        "python",
+        "graphic design",
+        "ui/ux",
+        "adobe creative suite"
+      ],
+      "interest_keywords": [
+        "coding",
+        "technology",
+        "cybersecurity",
+        "software development",
+        "arts",
+        "gaming",
+        "digital media",
+        "software engineering"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for software developer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "22%",
-      "match_threshold": 0.5
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 14,
-      "title": "QA Automation Engineer",
-      "category": "Software Testing",
-      "required_skills": ["Selenium", "Python/Java", "Test Automation", "CI/CD Integration", "API Testing"],
-      "optional_skills": ["Appium", "Performance Testing (JMeter)", "Cypress", "Playwright"],
-      "skill_keywords": ["qa", "testing", "automation", "selenium", "quality assurance", "bug tracking", "test scripts"],
-      "interest_keywords": ["quality assurance", "testing", "automation", "software quality", "bug hunting"],
-      "education": ["Computer Science", "IT", "Engineering"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Design and execute automated test scripts to ensure software quality, identify bugs, and verify fixes.",
-      "average_salary": "₹5,00,000 - ₹12,00,000",
+      "title": "Machine Learning Engineer",
+      "category": "Software Development",
+      "required_skills": [
+        "Machine Learning",
+        "Python",
+        "AI",
+        "Big Data",
+        "TensorFlow",
+        "UX Research"
+      ],
+      "optional_skills": [
+        "Prototyping",
+        "Interaction Design",
+        "Data Analysis",
+        "C++",
+        "Embedded Systems",
+        "IoT"
+      ],
+      "skill_keywords": [
+        "machine learning",
+        "python",
+        "ai",
+        "big data",
+        "tensorflow",
+        "ux research",
+        "prototyping",
+        "interaction design",
+        "data analysis",
+        "c++",
+        "embedded systems",
+        "iot"
+      ],
+      "interest_keywords": [
+        "ai",
+        "innovation",
+        "technology",
+        "data science",
+        "management",
+        "business"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for machine learning engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "15%",
+      "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 15,
-      "title": "Game Developer",
-      "category": "Software Development",
-      "required_skills": ["C++", "C#", "Unity", "Unreal Engine", "3D Math", "Game Physics"],
-      "optional_skills": ["OpenGL/DirectX", "Shader Programming", "VR/AR Development", "Network Programming"],
-      "skill_keywords": ["game", "gaming", "unity", "unreal", "c++", "c#", "3d", "physics", "graphics"],
-      "interest_keywords": ["gaming", "game design", "virtual reality", "graphics", "programming"],
-      "education": ["Computer Science", "Game Development", "Mathematics"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Design and develop video games for computers, consoles, or mobile devices using game engines and programming languages.",
-      "average_salary": "₹5,00,000 - ₹15,00,000",
-      "demand_level": "Medium-High",
-      "growth_rate": "12%",
-      "match_threshold": 0.45
+      "title": "Marketing Manager",
+      "category": "Marketing",
+      "required_skills": [
+        "Marketing Strategy",
+        "Digital Marketing",
+        "CRM",
+        "Java",
+        "System Design",
+        "Cloud Computing"
+      ],
+      "optional_skills": [
+        "Research",
+        "Statistical Analysis",
+        "Python"
+      ],
+      "skill_keywords": [
+        "marketing strategy",
+        "digital marketing",
+        "crm",
+        "java",
+        "system design",
+        "cloud computing",
+        "research",
+        "statistical analysis",
+        "python"
+      ],
+      "interest_keywords": [
+        "software development",
+        "marketing",
+        "business",
+        "ai"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for marketing manager tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     },
     {
       "id": 16,
-      "title": "Big Data Engineer",
-      "category": "Data Science",
-      "required_skills": ["Hadoop", "Spark", "Scala/Java", "SQL/NoSQL", "Data Warehousing", "ETL Pipelines"],
-      "optional_skills": ["Kafka", "Airflow", "Cloud Data Services (AWS Glue, BigQuery)", "Data Modeling"],
-      "skill_keywords": ["big data", "hadoop", "spark", "etl", "data engineering", "pipelines", "database"],
-      "interest_keywords": ["big data", "data infrastructure", "large scale systems", "database architecture"],
-      "education": ["Computer Science", "IT", "Data Engineering"],
-      "experience_levels": ["2+ years", "3-5 years"],
-      "description": "Develop, maintain, and test big data solutions, ensuring data architecture can handle large-scale processing and analysis.",
-      "average_salary": "₹9,00,000 - ₹22,00,000",
+      "title": "Full Stack Developer",
+      "category": "Software Development",
+      "required_skills": [
+        "JavaScript",
+        "React",
+        "Node.js",
+        "Graphic Design",
+        "UI/UX",
+        "Adobe Creative Suite"
+      ],
+      "optional_skills": [
+        "Cloud Computing",
+        "DevOps",
+        "Python"
+      ],
+      "skill_keywords": [
+        "javascript",
+        "react",
+        "node.js",
+        "graphic design",
+        "ui/ux",
+        "adobe creative suite",
+        "cloud computing",
+        "devops",
+        "python"
+      ],
+      "interest_keywords": [
+        "web development",
+        "arts",
+        "technology",
+        "digital media"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for full stack developer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
       "growth_rate": "20%",
-      "match_threshold": 0.5
+      "match_threshold": 0.4
     },
     {
       "id": 17,
-      "title": "Network Engineer",
-      "category": "Infrastructure",
-      "required_skills": ["Networking Protocols (TCP/IP)", "Routing & Switching", "Network Security", "Cisco Hardware", "Troubleshooting"],
-      "optional_skills": ["SD-WAN", "Network Automation (Python/Ansible)", "Cloud Networking", "VPN Configuration"],
-      "skill_keywords": ["network", "networking", "cisco", "routing", "switching", "infrastructure", "connectivity"],
-      "interest_keywords": ["networking", "infrastructure", "connectivity", "hardware", "internet"],
-      "education": ["Computer Science", "IT", "Electronics Engineering", "CCNA/CCNP"],
-      "experience_levels": ["Fresher", "0-2 years", "2+ years"],
-      "description": "Plan, implement, and oversee computer networks that support in-house voice, data, video, and wireless network services.",
-      "average_salary": "₹4,50,000 - ₹12,00,000",
-      "demand_level": "Medium-High",
-      "growth_rate": "10%",
+      "title": "AI Specialist",
+      "category": "Data Science & AI",
+      "required_skills": [
+        "Data Science",
+        "Machine Learning",
+        "Python",
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "optional_skills": [
+        "Java",
+        "Algorithms",
+        "Data Structures"
+      ],
+      "skill_keywords": [
+        "data science",
+        "machine learning",
+        "python",
+        "html",
+        "css",
+        "javascript",
+        "java",
+        "algorithms",
+        "data structures"
+      ],
+      "interest_keywords": [
+        "healthcare",
+        "ai"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for ai specialist tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
       "match_threshold": 0.4
     },
     {
       "id": 18,
-      "title": "IoT Solutions Architect",
-      "category": "Emerging Tech",
-      "required_skills": ["Embedded Systems", "IoT Protocols (MQTT/CoAP)", "Cloud IoT Platforms", "Sensor Technology", "Data Analytics"],
-      "optional_skills": ["Edge Computing", "Wireless Tech (Zigbee/LoRaWAN)", "Security for IoT", "Hardware Design Basics"],
-      "skill_keywords": ["iot", "internet of things", "embedded", "sensors", "smart devices", "automation", "hardware"],
-      "interest_keywords": ["iot", "smart home", "connected devices", "hardware", "automation", "embedded systems"],
-      "education": ["Electronics Engineering", "Computer Science", "Mechatronics"],
-      "experience_levels": ["3+ years"],
-      "description": "Design and oversee the development of Internet of Things (IoT) solutions, connecting physical devices to the digital world.",
-      "average_salary": "₹12,00,000 - ₹28,00,000",
+      "title": "Cybersecurity Analyst",
+      "category": "Security",
+      "required_skills": [
+        "Network Security",
+        "Linux",
+        "Python",
+        "C++",
+        "Embedded Systems",
+        "IoT"
+      ],
+      "optional_skills": [
+        "UX Research",
+        "Prototyping",
+        "Interaction Design"
+      ],
+      "skill_keywords": [
+        "network security",
+        "linux",
+        "python",
+        "c++",
+        "embedded systems",
+        "iot",
+        "ux research",
+        "prototyping",
+        "interaction design"
+      ],
+      "interest_keywords": [
+        "management",
+        "business",
+        "technology",
+        "cybersecurity"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for cybersecurity analyst tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
       "demand_level": "High",
-      "growth_rate": "26%",
-      "match_threshold": 0.55
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 19,
+      "title": "Research Analyst",
+      "category": "Business",
+      "required_skills": [
+        "Python",
+        "Statistics",
+        "Data Mining",
+        "SQL",
+        "Data Warehousing",
+        "ETL"
+      ],
+      "optional_skills": [
+        "Copywriting",
+        "SEO",
+        "Social Media"
+      ],
+      "skill_keywords": [
+        "python",
+        "statistics",
+        "data mining",
+        "sql",
+        "data warehousing",
+        "etl",
+        "copywriting",
+        "seo",
+        "social media"
+      ],
+      "interest_keywords": [
+        "research",
+        "analytics",
+        "academia",
+        "finance"
+      ],
+      "education": [
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for research analyst tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 20,
+      "title": "DevOps Engineer",
+      "category": "Software Development",
+      "required_skills": [
+        "Python",
+        "Cloud Computing",
+        "DevOps",
+        "JavaScript",
+        "React",
+        "Node.js"
+      ],
+      "optional_skills": [
+        "Network Security",
+        "Linux"
+      ],
+      "skill_keywords": [
+        "python",
+        "cloud computing",
+        "devops",
+        "javascript",
+        "react",
+        "node.js",
+        "network security",
+        "linux"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "technology",
+        "business",
+        "communications"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for devops engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 21,
+      "title": "Graphic Designer",
+      "category": "Design",
+      "required_skills": [
+        "Graphic Design",
+        "Adobe Illustrator",
+        "Illustration",
+        "Content Creation",
+        "Digital Illustration",
+        "Creativity"
+      ],
+      "optional_skills": [
+        "Adobe Creative Suite",
+        "Python",
+        "Adobe Photoshop",
+        "Digital Marketing",
+        "SEO",
+        "Java"
+      ],
+      "skill_keywords": [
+        "graphic design",
+        "adobe illustrator",
+        "illustration",
+        "content creation",
+        "digital illustration",
+        "creativity",
+        "adobe creative suite",
+        "python",
+        "adobe photoshop",
+        "digital marketing",
+        "seo",
+        "java"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "healthcare",
+        "technology",
+        "cybersecurity",
+        "design",
+        "arts",
+        "digital media",
+        "web development",
+        "ai"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for graphic designer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 22,
+      "title": "Deep Learning Engineer",
+      "category": "Software Development",
+      "required_skills": [
+        "Python",
+        "TensorFlow",
+        "Deep Learning",
+        "Project Management",
+        "Agile",
+        "Communication"
+      ],
+      "optional_skills": [
+        "Data Visualization",
+        "R"
+      ],
+      "skill_keywords": [
+        "python",
+        "tensorflow",
+        "deep learning",
+        "project management",
+        "agile",
+        "communication",
+        "data visualization",
+        "r"
+      ],
+      "interest_keywords": [
+        "research",
+        "technology",
+        "academia"
+      ],
+      "education": [
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for deep learning engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 23,
+      "title": "Business Analyst",
+      "category": "Business",
+      "required_skills": [
+        "SQL",
+        "Business Analysis",
+        "Excel",
+        "Python",
+        "Data Warehousing",
+        "R"
+      ],
+      "optional_skills": [
+        "Deep Learning",
+        "Statistics",
+        "C#",
+        ".NET",
+        "Software Design",
+        "Machine Learning"
+      ],
+      "skill_keywords": [
+        "sql",
+        "business analysis",
+        "excel",
+        "python",
+        "data warehousing",
+        "r",
+        "deep learning",
+        "statistics",
+        "c#",
+        ".net",
+        "software design",
+        "machine learning"
+      ],
+      "interest_keywords": [
+        "finance",
+        "technology",
+        "analytics",
+        "design",
+        "cybersecurity",
+        "web development",
+        "business"
+      ],
+      "education": [
+        "Bachelor's",
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for business analyst tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 24,
+      "title": "Backend Developer",
+      "category": "Software Development",
+      "required_skills": [
+        "Java",
+        "Spring",
+        "Microservices",
+        "Financial Analysis",
+        "Excel",
+        "Econometrics"
+      ],
+      "optional_skills": [
+        "Python",
+        "Data Analysis",
+        "Machine Learning"
+      ],
+      "skill_keywords": [
+        "java",
+        "spring",
+        "microservices",
+        "financial analysis",
+        "excel",
+        "econometrics",
+        "python",
+        "data analysis",
+        "machine learning"
+      ],
+      "interest_keywords": [
+        "software engineering",
+        "data science",
+        "technology",
+        "finance"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for backend developer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 25,
+      "title": "Biostatistician",
+      "category": "Software Development",
+      "required_skills": [
+        "Python",
+        "Machine Learning",
+        "R",
+        "Cloud Computing",
+        "DevOps",
+        "Graphic Design"
+      ],
+      "optional_skills": [
+        "UI/UX",
+        "Adobe Creative Suite"
+      ],
+      "skill_keywords": [
+        "python",
+        "machine learning",
+        "r",
+        "cloud computing",
+        "devops",
+        "graphic design",
+        "ui/ux",
+        "adobe creative suite"
+      ],
+      "interest_keywords": [
+        "data science",
+        "arts",
+        "digital media",
+        "biotech"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for biostatistician tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 26,
+      "title": "Data Engineer",
+      "category": "Data Science & AI",
+      "required_skills": [
+        "Python",
+        "Big Data",
+        "Machine Learning",
+        "UX Research",
+        "Prototyping",
+        "Interaction Design"
+      ],
+      "optional_skills": [
+        "C++",
+        "Embedded Systems",
+        "IoT"
+      ],
+      "skill_keywords": [
+        "python",
+        "big data",
+        "machine learning",
+        "ux research",
+        "prototyping",
+        "interaction design",
+        "c++",
+        "embedded systems",
+        "iot"
+      ],
+      "interest_keywords": [
+        "management",
+        "business",
+        "technology",
+        "finance"
+      ],
+      "education": [
+        "Master's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for data engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 27,
+      "title": "Content Strategist",
+      "category": "Content & Writing",
+      "required_skills": [
+        "SEO",
+        "Copywriting",
+        "Social Media",
+        "Content Writing",
+        "Storytelling",
+        "HTML"
+      ],
+      "optional_skills": [
+        "CSS",
+        "JavaScript",
+        "SQL",
+        "Data Warehousing",
+        "ETL",
+        "Java"
+      ],
+      "skill_keywords": [
+        "seo",
+        "copywriting",
+        "social media",
+        "content writing",
+        "storytelling",
+        "html",
+        "css",
+        "javascript",
+        "sql",
+        "data warehousing",
+        "etl",
+        "java"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "ai",
+        "media",
+        "healthcare",
+        "analytics",
+        "content",
+        "finance"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for content strategist tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 28,
+      "title": "Automation Engineer",
+      "category": "Software Testing",
+      "required_skills": [
+        "Python",
+        "Automation",
+        "Data Analysis",
+        "Data Visualization",
+        "R",
+        "Project Management"
+      ],
+      "optional_skills": [
+        "Agile",
+        "Communication"
+      ],
+      "skill_keywords": [
+        "python",
+        "automation",
+        "data analysis",
+        "data visualization",
+        "r",
+        "project management",
+        "agile",
+        "communication"
+      ],
+      "interest_keywords": [
+        "research",
+        "technology",
+        "academia",
+        "engineering"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for automation engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 29,
+      "title": "Mobile Developer",
+      "category": "Software Development",
+      "required_skills": [
+        "Java",
+        "Android",
+        "UI Design",
+        "C++",
+        "Embedded Systems",
+        "IoT"
+      ],
+      "optional_skills": [
+        "UX Research",
+        "Prototyping",
+        "Interaction Design"
+      ],
+      "skill_keywords": [
+        "java",
+        "android",
+        "ui design",
+        "c++",
+        "embedded systems",
+        "iot",
+        "ux research",
+        "prototyping",
+        "interaction design"
+      ],
+      "interest_keywords": [
+        "mobile apps",
+        "management",
+        "technology",
+        "business"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for mobile developer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 30,
+      "title": "UX Researcher",
+      "category": "Design",
+      "required_skills": [
+        "UX Research",
+        "Prototyping",
+        "Interaction Design",
+        "SQL",
+        "Data Warehousing",
+        "ETL"
+      ],
+      "optional_skills": [
+        "Copywriting",
+        "SEO",
+        "Social Media"
+      ],
+      "skill_keywords": [
+        "ux research",
+        "prototyping",
+        "interaction design",
+        "sql",
+        "data warehousing",
+        "etl",
+        "copywriting",
+        "seo",
+        "social media"
+      ],
+      "interest_keywords": [
+        "analytics",
+        "user experience",
+        "design",
+        "finance"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for ux researcher tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 31,
+      "title": "Cybersecurity Specialist",
+      "category": "Security",
+      "required_skills": [
+        "Python",
+        "Network Security",
+        "Cybersecurity",
+        "JavaScript",
+        "React",
+        "Node.js"
+      ],
+      "optional_skills": [
+        "Linux"
+      ],
+      "skill_keywords": [
+        "python",
+        "network security",
+        "cybersecurity",
+        "javascript",
+        "react",
+        "node.js",
+        "linux"
+      ],
+      "interest_keywords": [
+        "marketing",
+        "technology",
+        "security",
+        "communications"
+      ],
+      "education": [
+        "Bachelor's",
+        "PhD",
+        "Master's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for cybersecurity specialist tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
+    },
+    {
+      "id": 32,
+      "title": "Cloud Engineer",
+      "category": "Cloud Computing",
+      "required_skills": [
+        "Python",
+        "Cloud Computing",
+        "DevOps",
+        "Project Management",
+        "Agile",
+        "Communication"
+      ],
+      "optional_skills": [
+        "Data Visualization",
+        "R"
+      ],
+      "skill_keywords": [
+        "python",
+        "cloud computing",
+        "devops",
+        "project management",
+        "agile",
+        "communication",
+        "data visualization",
+        "r"
+      ],
+      "interest_keywords": [
+        "academia",
+        "technology",
+        "business",
+        "research"
+      ],
+      "education": [
+        "Master's",
+        "Bachelor's"
+      ],
+      "experience_levels": [
+        "Fresher",
+        "0-2 years",
+        "2+ years"
+      ],
+      "description": "Professional responsible for cloud engineer tasks, strategy, and solving industry problems.",
+      "average_salary": "\u20b98,00,000 - \u20b920,00,000",
+      "demand_level": "High",
+      "growth_rate": "20%",
+      "match_threshold": 0.4
     }
   ]
 }
